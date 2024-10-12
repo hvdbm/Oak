@@ -9,6 +9,7 @@ class Person():
     childrens: list[str],
     id: str | None = None,
     death_year: str | None = None,
+    nickname: str | None = None,
   ):
     self.id = id if id != None else f"{first_name} {last_name} ({birth_year})"
 
@@ -17,9 +18,15 @@ class Person():
     self.sex = sex
     self.birth_year = birth_year
     self.death_year = death_year
+    self.nickname = nickname
+
+    # Relationships
     self.parents = parents
     self.spouses = spouses
     self.childrens = childrens
+
+    # Calculated properties
+    self.n_ancestors = None
   
   @classmethod
   def from_obj(cls, obj):
@@ -33,10 +40,13 @@ class Person():
       parents=obj["parents"],
       spouses=obj["spouses"],
       childrens=obj["childrens"],
+      nickname=obj.get("nickname", None),
     )
 
-  def get_label(self):
-    full_name = f"{self.first_name} {self.last_name}"
-    death = f" - {self.death_year}" if self.death_year != None else ""
+  def get_label(self, show_nickname=False):
+    label = f"{self.first_name} {self.last_name} \n"
+    if show_nickname and self.nickname != None: label += f'"{self.nickname}" \n'
+    label += f"{self.birth_year}"
+    if self.death_year != None: label += f" - {self.death_year}"
 
-    return f"{full_name} \n {self.birth_year}{death}"
+    return label
