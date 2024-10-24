@@ -21,8 +21,12 @@ class Configuration():
     self.graph_title = graph_title
   
   @classmethod
-  def from_path(cls, path: str):
-    with open(path, 'r') as file:
-      dict_config = yaml.safe_load(file)
-      dict_config["label_options"] = PersonLabelOptions(**dict_config.get("label_options", {}))
-      return cls(**dict_config)
+  def from_path(cls, path: str | None):
+    dict_config = {}
+    
+    if path is not None:
+      with open(path, 'r') as file:
+        dict_config = yaml.safe_load(file)
+    
+    dict_config["label_options"] = PersonLabelOptions(**dict_config.get("label_options", {}))
+    return cls(**dict_config)
