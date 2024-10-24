@@ -1,2 +1,3 @@
 pandas
 pygraphviz
+pyyaml

@@ -1,3 +1,5 @@
+from src.configuration import PersonLabelOptions
+
 class Person():
   def __init__(self,
     first_name: str,
@@ -43,10 +45,9 @@ class Person():
       nickname=obj.get("nickname", None),
     )
 
-  def get_label(self, show_nickname=False):
-    label = f"{self.first_name} {self.last_name} \n"
-    if show_nickname and self.nickname != None: label += f'"{self.nickname}" \n'
-    label += f"{self.birth_year}"
-    if self.death_year != None: label += f" - {self.death_year}"
+  def get_label(self, options: PersonLabelOptions):
+    last_name = self.last_name.upper() if options.uppercase_last_name else self.last_name
+    nickname = f'"{self.nickname}" \n' if options.show_nickname and self.nickname != None else ""
+    death_year = f" - {self.death_year}" if self.death_year != None else ""
 
-    return label
+    return f"{self.first_name} {last_name} \n {nickname} {self.birth_year} {death_year}"

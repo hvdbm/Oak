@@ -1,6 +1,7 @@
 from src.person import Person
 import pygraphviz as pgv
 import json
+from src.configuration import Configuration
 
 Family = dict[Person]
 
@@ -36,9 +37,13 @@ def find_n_ancestors(person: Person, family: Family) -> int:
   
   return n
 
-def draw_family_tree(family: Family, node_shape: str, output_file_path: str, graph_title: str, show_nickname: bool) -> None:
-  G = pgv.AGraph(splines="ortho", label=graph_title)
-  G.node_attr['shape'] = node_shape
+def draw_family_tree(
+  family: Family, 
+  config: Configuration,
+  output_file_path: str
+) -> None:
+  G = pgv.AGraph(splines="ortho", label=config.graph_title)
+  G.node_attr['shape'] = config.node_shape
 
   values = list(family.values())
   values.sort(key=lambda x: x.birth_year)
@@ -49,16 +54,16 @@ def draw_family_tree(family: Family, node_shape: str, output_file_path: str, gra
   subgraphs = {}
 
   for person in values:
-    G.add_node(person.id, label=person.get_label(show_nickname), group=person.id)
+    G.add_node(person.id, label=person.get_label(config.label_options), group=person.id)
 
     if person.parents != []:
       # Add central childrens nodes
       parents_union_name = f"{get_union_name(person.parents)}/childrens"
-      G.add_node(parents_union_name, shape="point", style="invis", width="0")
+      G.add_node(parents_union_name, shape="point", style="invis", group=get_union_name(person.parents))
 
       # Add middle childrens nodes and edges
       parents_union_name_w_child = f"{parents_union_name}/{person.id}"
-      G.add_node(parents_union_name_w_child, shape="point", style="invis", width="0", group=person.id)
+      G.add_node(parents_union_name_w_child, shape="point", style="invis", group=person.id)
       G.add_edge(parents_union_name_w_child, person.id, minlen=1)
 
       # Prepare subgraph with all the middle childrens nodes align at the same rank
@@ -69,7 +74,7 @@ def draw_family_tree(family: Family, node_shape: str, output_file_path: str, gra
 
     for spouse in person.spouses:
       union_name = f"{get_union_name([person.id, spouse])}/union"
-      G.add_node(union_name, shape="point", style="invis", width="0")
+      G.add_node(union_name, shape="point", style="invis", group=get_union_name([person.id, spouse]))
       
       if union_name not in subgraphs.keys():
         subgraphs[union_name] = [person.id, spouse]
