@@ -1,3 +1,8 @@
+import pycountry
+
+# FRANCE_FLAG = pycountry.countries.get(alpha_2="FR").flag
+# CANADA_FLAG = pycountry.countries.get(alpha_2="CA").flag
+
 from src.configuration import PersonLabelOptions
 
 class Person():
@@ -12,6 +17,7 @@ class Person():
     id: str | None = None,
     death_year: str | None = None,
     nickname: str | None = None,
+    nationalities: list[str] = [],
   ):
     self.id = id if id != None else f"{first_name} {last_name} ({birth_year})"
 
@@ -21,6 +27,7 @@ class Person():
     self.birth_year = birth_year
     self.death_year = death_year
     self.nickname = nickname
+    self.nationalities = nationalities
 
     # Relationships
     self.parents = parents
@@ -29,25 +36,11 @@ class Person():
 
     # Calculated properties
     self.n_ancestors = None
-  
-  @classmethod
-  def from_obj(cls, obj):
-    return cls(
-      id=obj.get("id", None),
-      first_name=obj["first_name"],
-      last_name=obj["last_name"],
-      sex=obj["sex"],
-      birth_year=obj["birth_year"],
-      death_year=obj.get("death_year", None),
-      parents=obj["parents"],
-      spouses=obj["spouses"],
-      childrens=obj["childrens"],
-      nickname=obj.get("nickname", None),
-    )
 
   def get_label(self, options: PersonLabelOptions):
-    last_name = self.last_name.upper() if options.uppercase_last_name else self.last_name
+    last_name = self.last_name.upper() if options.upper_last_name else self.last_name
     nickname = f'"{self.nickname}" \n' if options.show_nickname and self.nickname != None else ""
     death_year = f" - {self.death_year}" if self.death_year != None else ""
+    nationalities = f"\n {"  ".join([pycountry.countries.get(alpha_2=n).flag for n in self.nationalities])}" if self.nationalities != None and self.nationalities != [] else ""
 
-    return f"{self.first_name} {last_name} \n {nickname} {self.birth_year} {death_year}"
+    return f"{self.first_name} {last_name} \n {nickname} {self.birth_year} {death_year} {nationalities}"

@@ -2,23 +2,25 @@ import yaml
 
 class PersonLabelOptions():
   def __init__(self,
+    show_nationalities: bool = False,
     show_nickname: bool = True,
-    uppercase_last_name: bool = False
+    upper_last_name: bool = False
   ):
+    self.show_nationalities = show_nationalities
     self.show_nickname = show_nickname
-    self.uppercase_last_name = uppercase_last_name
+    self.upper_last_name = upper_last_name
 
 class Configuration():
   def __init__(self,
-    label_options: PersonLabelOptions,
     filename: str = "family_tree.png",
     node_shape: str = "box",
     graph_title: str = "",
+    label_options: PersonLabelOptions = PersonLabelOptions(**{}),
   ):
-    self.label_options = label_options
     self.filename = filename
     self.node_shape = node_shape
     self.graph_title = graph_title
+    self.label_options = label_options
   
   @classmethod
   def from_path(cls, path: str | None):

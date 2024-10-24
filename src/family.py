@@ -9,7 +9,7 @@ def read_family(file_path: str) -> Family:
   family = {}
   with open(file_path, 'r') as file:
     for p in json.load(file):
-      person = Person.from_obj(p)
+      person = Person(**p)
       family[person.id] = person
   
   for _, value in family.items():
