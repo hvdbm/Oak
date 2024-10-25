@@ -42,7 +42,13 @@ def draw_family_tree(
   config: Configuration,
   output_file_path: str
 ) -> None:
-  G = pgv.AGraph(splines="ortho", label=config.graph_title)
+  G = pgv.AGraph(
+    splines="ortho",
+    label=config.title_config.title,
+    labelloc=config.title_config.location,
+    fontsize=config.title_config.font_size
+  )
+  
   G.node_attr['shape'] = config.node_shape
 
   values = list(family.values())
@@ -54,7 +60,11 @@ def draw_family_tree(
   subgraphs = {}
 
   for person in values:
-    G.add_node(person.id, label=person.get_label(config.label_options), group=person.id)
+    G.add_node(
+      person.id,
+      label=person.get_label(config.person_label_config),
+      group=person.id
+    )
 
     if person.parents != []:
       # Add central childrens nodes

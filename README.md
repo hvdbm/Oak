@@ -1,6 +1,10 @@
 # Oak
 
-Tree generated with [Graphviz](https://graphviz.org).
+Visualization of a family tree based on the [Graphviz](https://graphviz.org) software.
+
+## Installation
+
+Install dependencies with `pip install -r requirements.txt`.
 
 ## Command
 

@@ -1,9 +1,6 @@
 import pycountry
 
-# FRANCE_FLAG = pycountry.countries.get(alpha_2="FR").flag
-# CANADA_FLAG = pycountry.countries.get(alpha_2="CA").flag
-
-from src.configuration import PersonLabelOptions
+from src.configuration import PersonLabelConfig
 
 class Person():
   def __init__(self,
@@ -37,9 +34,9 @@ class Person():
     # Calculated properties
     self.n_ancestors = None
 
-  def get_label(self, options: PersonLabelOptions):
-    last_name = self.last_name.upper() if options.upper_last_name else self.last_name
-    nickname = f'"{self.nickname}" \n' if options.show_nickname and self.nickname != None else ""
+  def get_label(self, config: PersonLabelConfig):
+    last_name = self.last_name.upper() if config.upper_last_name else self.last_name
+    nickname = f'"{self.nickname}" \n' if config.show_nickname and self.nickname != None else ""
     death_year = f" - {self.death_year}" if self.death_year != None else ""
     nationalities = f"\n {"  ".join([pycountry.countries.get(alpha_2=n).flag for n in self.nationalities])}" if self.nationalities != None and self.nationalities != [] else ""
 
