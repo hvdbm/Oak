@@ -1,6 +1,6 @@
 import pycountry
 
-from src.configuration import PersonLabelConfig
+from src.config.person_label_config import PersonLabelConfig
 
 class Person():
   def __init__(self,

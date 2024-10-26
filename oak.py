@@ -1,6 +1,7 @@
 import os
 from argparse import ArgumentParser
-from src.family import read_family, draw_family_tree
+
+from src.family import Family, draw_family_tree
 from src.configuration import Configuration
 
 def main(csv_path: str, config_file_path: str | None, output_dir: str) -> None:
@@ -9,12 +10,12 @@ def main(csv_path: str, config_file_path: str | None, output_dir: str) -> None:
 
   config = Configuration.from_path(config_file_path)
 
-  family_data = read_family(csv_path)
+  family = Family.from_path(csv_path)
 
   output_file_path = os.path.join(output_dir, config.filename)
 
   draw_family_tree(
-    family_data,
+    family,
     config,
     output_file_path
   )

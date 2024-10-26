@@ -1,22 +1,43 @@
-from src.person import Person
 import pygraphviz as pgv
 import json
+
 from src.configuration import Configuration
+from src.person import Person
 
-Family = dict[Person]
+class Family():
+  def __init__(self,
+    name: str = "",
+    members: dict[str, Person] = {}
+  ):
+    self.name = name
+    self.members = members
 
-def read_family(file_path: str) -> Family:
-  family = {}
-  with open(file_path, 'r') as file:
-    for p in json.load(file):
-      person = Person(**p)
-      family[person.id] = person
-  
-  for _, value in family.items():
-    value.n_ancestors = find_n_ancestors(value, family)
+    for _, value in members.items():
+      value.n_ancestors = self.find_n_ancestors(value)
 
-  return family
+  def find_n_ancestors(self, person: Person) -> int:
+    if person.parents == []: return 0
+    if person.n_ancestors != None: return person.n_ancestors
+    
+    n = 1
+    for parent in person.parents:
+      if parent not in self.members.keys(): continue
+      n += self.find_n_ancestors(self.members[parent])
+    
+    return n
 
+  @classmethod
+  def from_path(cls, path: str):
+    with open(path, 'r') as file:
+      family = json.load(file)
+      members_dict = {}
+      for m in family["members"]:
+        person = Person(**m)
+        members_dict[person.id] = person
+
+    family["members"] = members_dict
+    
+    return cls(**family)
 def get_union_name(parents):
   if len(parents) == 1:
      parents.append("???")
@@ -25,17 +46,6 @@ def get_union_name(parents):
     return f"{sorted_id[0]} & {sorted_id[1]}"
   except:
      print(parents)
-        
-def find_n_ancestors(person: Person, family: Family) -> int:
-  if person.parents == []: return 0
-  if person.n_ancestors != None: return person.n_ancestors
-  
-  n = 1
-  for parent in person.parents:
-    if parent not in family.keys(): continue
-    n += find_n_ancestors(family[parent], family)
-  
-  return n
 
 def draw_family_tree(
   family: Family, 
@@ -44,14 +54,14 @@ def draw_family_tree(
 ) -> None:
   G = pgv.AGraph(
     splines="ortho",
-    label=config.title_config.title,
+    label=family.name,
     labelloc=config.title_config.location,
     fontsize=config.title_config.font_size
   )
   
   G.node_attr['shape'] = config.node_shape
 
-  values = list(family.values())
+  values = list(family.members.values())
   values.sort(key=lambda x: x.birth_year)
   values.reverse()
   values.sort(key=lambda x: x.n_ancestors)
@@ -69,11 +79,11 @@ def draw_family_tree(
     if person.parents != []:
       # Add central childrens nodes
       parents_union_name = f"{get_union_name(person.parents)}/childrens"
-      G.add_node(parents_union_name, shape="point", style="invis", group=get_union_name(person.parents))
+      G.add_node(parents_union_name, shape="point", style="invis", width="0", group=get_union_name(person.parents))
 
       # Add middle childrens nodes and edges
       parents_union_name_w_child = f"{parents_union_name}/{person.id}"
-      G.add_node(parents_union_name_w_child, shape="point", style="invis", group=person.id)
+      G.add_node(parents_union_name_w_child, shape="point", style="invis", width="0", group=person.id)
       G.add_edge(parents_union_name_w_child, person.id, minlen=1)
 
       # Prepare subgraph with all the middle childrens nodes align at the same rank
@@ -84,7 +94,7 @@ def draw_family_tree(
 
     for spouse in person.spouses:
       union_name = f"{get_union_name([person.id, spouse])}/union"
-      G.add_node(union_name, shape="point", style="invis", group=get_union_name([person.id, spouse]))
+      G.add_node(union_name, shape="point", style="invis", width="0", group=get_union_name([person.id, spouse]))
       
       if union_name not in subgraphs.keys():
         subgraphs[union_name] = [person.id, spouse]

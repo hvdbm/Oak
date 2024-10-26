@@ -1,24 +1,8 @@
 import yaml
 
-class TitleConfig():
-  def __init__(self,
-    title: str = "",
-    font_size: float = 20,
-    location: str = "t"
-  ):
-    self.title = title
-    self.font_size = font_size
-    self.location = location
-
-class PersonLabelConfig():
-  def __init__(self,
-    show_nationalities: bool = False,
-    show_nickname: bool = True,
-    upper_last_name: bool = False
-  ):
-    self.show_nationalities = show_nationalities
-    self.show_nickname = show_nickname
-    self.upper_last_name = upper_last_name
+from src.config.title_config import TitleConfig
+from src.config.person_label_config import PersonLabelConfig
+from src.utils import dict_key_as_object
 
 class Configuration():
   def __init__(self,
@@ -44,7 +28,3 @@ class Configuration():
     dict_key_as_object(dict_config, "person_label_config", PersonLabelConfig)
     
     return cls(**dict_config)
-
-def dict_key_as_object(dict_config: dict, key: str, c):
-  if key in dict_config.keys():
-    dict_config[key] = c(**dict_config.get(key))
