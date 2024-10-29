@@ -64,6 +64,7 @@ def draw_family_tree(
 ) -> None:
   G = pgv.AGraph(
     splines="ortho",
+    bgcolor=config.background_color,
     label=f"<{bold(family.name)} {newline()} >",
     labelloc=config.title_config.location,
     fontsize=config.title_config.font_size
