@@ -2,6 +2,7 @@ import pygraphviz as pgv
 import json
 
 from src.configuration import Configuration, NodeStyleConfig
+from src.label import bold, newline
 from src.person import Person
 
 class Family():
@@ -63,7 +64,7 @@ def draw_family_tree(
 ) -> None:
   G = pgv.AGraph(
     splines="ortho",
-    label=family.name,
+    label=f"<{bold(family.name)} {newline()} >",
     labelloc=config.title_config.location,
     fontsize=config.title_config.font_size
   )
