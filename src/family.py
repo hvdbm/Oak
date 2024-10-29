@@ -1,7 +1,7 @@
 import pygraphviz as pgv
 import json
 
-from src.configuration import Configuration
+from src.configuration import Configuration, NodeStyleConfig
 from src.person import Person
 
 class Family():
@@ -47,6 +47,15 @@ def get_union_name(parents):
   except:
      print(parents)
 
+def get_node_color(person: Person, node_style_config: NodeStyleConfig) -> str:
+  if node_style_config.color_by is None : return node_style_config.default_color
+  
+  if node_style_config.color_by in person.__dict__.keys():
+    value = person.__dict__.get(node_style_config.color_by)
+    return node_style_config.color_by_dict.get(value, node_style_config.default_color)
+  
+  return node_style_config.default_color
+
 def draw_family_tree(
   family: Family, 
   config: Configuration,
@@ -59,7 +68,7 @@ def draw_family_tree(
     fontsize=config.title_config.font_size
   )
   
-  G.node_attr['shape'] = config.node_shape
+  G.node_attr['shape'] = config.node_style_config.shape
 
   values = list(family.members.values())
   values.sort(key=lambda x: x.birth_year)
@@ -72,6 +81,8 @@ def draw_family_tree(
   for person in values:
     G.add_node(
       person.id,
+      style=config.node_style_config.style,
+      fillcolor=get_node_color(person, config.node_style_config),
       label=person.get_label(config.person_label_config),
       group=person.id
     )

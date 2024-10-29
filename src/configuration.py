@@ -1,30 +1,32 @@
 import yaml
 
-from src.config.title_config import TitleConfig
+from src.config.node_style_config import NodeStyleConfig
 from src.config.person_label_config import PersonLabelConfig
+from src.config.title_config import TitleConfig
 from src.utils import dict_key_as_object
 
 class Configuration():
   def __init__(self,
     filename: str = "family_tree.png",
-    node_shape: str = "box",
-    title_config: TitleConfig = TitleConfig(**{}),
+    node_style_config: NodeStyleConfig = NodeStyleConfig(**{}),
     person_label_config: PersonLabelConfig = PersonLabelConfig(**{}),
+    title_config: TitleConfig = TitleConfig(**{}),
   ):
     self.filename = filename
-    self.node_shape = node_shape
-    self.title_config = title_config
+    self.node_style_config = node_style_config
     self.person_label_config = person_label_config
+    self.title_config = title_config
   
   @classmethod
   def from_path(cls, path: str | None):
-    dict_config = {}
-    
-    if path is not None:
+    if path is None:
+      dict_config = {}
+    else:
       with open(path, 'r') as file:
         dict_config = yaml.safe_load(file)
 
-    dict_key_as_object(dict_config, "title_config", TitleConfig)
+    dict_key_as_object(dict_config, "node_style_config", NodeStyleConfig)
     dict_key_as_object(dict_config, "person_label_config", PersonLabelConfig)
+    dict_key_as_object(dict_config, "title_config", TitleConfig)
     
     return cls(**dict_config)
