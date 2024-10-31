@@ -70,6 +70,7 @@ def draw_family_tree(
     fontsize=config.title_config.font_size
   )
   
+  G.edge_attr['color'] = config.edge_color
   G.node_attr['shape'] = config.node_style_config.shape
 
   values = list(family.members.values())

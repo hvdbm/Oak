@@ -8,12 +8,14 @@ from src.utils import dict_key_as_object
 class Configuration():
   def __init__(self,
     background_color: str = "",
+    edge_color: str = "",
     filename: str = "family_tree.png",
     node_style_config: NodeStyleConfig = NodeStyleConfig(**{}),
     person_label_config: PersonLabelConfig = PersonLabelConfig(**{}),
     title_config: TitleConfig = TitleConfig(**{}),
   ):
     self.background_color = background_color
+    self.edge_color = edge_color
     self.filename = filename
     self.node_style_config = node_style_config
     self.person_label_config = person_label_config
