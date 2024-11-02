@@ -35,11 +35,20 @@ class Person():
     # Calculated properties
     self.n_ancestors = None
 
-  def get_label(self, config: PersonLabelConfig):
-    # Complete name
+  def get_names_label(self, config: PersonLabelConfig):
+    names = self.first_name
+    
+    if config.split_names: names += newline()
+    
     last_name = self.last_name.upper() if config.upper_last_name else self.last_name
-    names = f"{self.first_name} {last_name}"
+    names += " " + last_name
+
     if config.bold_names: names = bold(names)
+
+    return names
+
+  def get_label(self, config: PersonLabelConfig):
+    names = self.get_names_label(config)
 
     nickname = f'"{self.nickname}" {newline()}' if config.show_nickname and self.nickname != None else ""
     death_year = f"- {self.death_year}" if self.death_year != None else ""
