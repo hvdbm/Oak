@@ -67,6 +67,7 @@ def draw_family_tree(
     bgcolor=config.background_color,
     label=f"<{bold(family.name)} {newline()} >",
     labelloc=config.title_config.location,
+    fontname=config.title_config.font,
     fontsize=config.title_config.font_size
   )
   
@@ -87,7 +88,9 @@ def draw_family_tree(
       style=config.node_style_config.style,
       fillcolor=get_node_color(person, config.node_style_config),
       label=person.get_label(config.person_label_config),
-      group=person.id
+      group=person.id,
+      fontname=config.node_style_config.font,
+      fontsize=config.node_style_config.font_size
     )
 
     if person.parents != []:
