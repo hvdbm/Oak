@@ -23,8 +23,7 @@ class Configuration():
   
   @classmethod
   def from_path(cls, path: str | None):
-    if path is None:
-      dict_config = {}
+    if path is None: dict_config = {}
     else:
       with open(path, 'r') as file:
         dict_config = yaml.safe_load(file)
