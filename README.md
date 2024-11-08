@@ -6,11 +6,14 @@ Visualization of a family tree based on the [Graphviz](https://graphviz.org) sof
 
 Install dependencies with `pip install -r requirements.txt`.
 
-## Command
+## Commands
 
-The code can be called with :
+### oak_tree
+
+To draw the family tree of a family :
+
 ```
-python oak.py [-h] --input_file_path INPUT_FILE_PATH [--config_file_path CONFIG_FILE_PATH] [--output_dir OUTPUT_DIR]
+python oak_tree.py [-h] --input_file_path INPUT_FILE_PATH [--config_file_path CONFIG_FILE_PATH] [--output_dir OUTPUT_DIR]
 
 options:
   -h, --help            show this help message and exit
@@ -21,3 +24,8 @@ options:
   --output_dir OUTPUT_DIR
                         Path to the output directory
 ```
+
+### oak_stats
+
+To get stats from the infos of the members of a familty :
+

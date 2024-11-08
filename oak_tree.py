@@ -4,13 +4,13 @@ from argparse import ArgumentParser
 from src.family import Family
 from src.configuration import Configuration
 
-def main(csv_path: str, config_file_path: str | None, output_dir: str) -> None:
+def main(input_file_path: str, config_file_path: str | None, output_dir: str) -> None:
   if not os.path.exists(output_dir): os.makedirs(output_dir)
 
   config = Configuration.from_path(config_file_path)
   output_file_path = os.path.join(output_dir, config.filename)
 
-  Family.from_path(csv_path).draw_family_tree(config, output_file_path)
+  Family.from_path(input_file_path).draw_family_tree(config, output_file_path)
 
 if __name__ == "__main__":
   parser = ArgumentParser()

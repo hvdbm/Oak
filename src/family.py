@@ -16,17 +16,6 @@ class Family():
     for _, value in members.items():
       value.n_ancestors = self.find_n_ancestors(value)
 
-  def find_n_ancestors(self, person: Person) -> int:
-    if person.parents == []: return 0
-    if person.n_ancestors != None: return person.n_ancestors
-    
-    n = 1
-    for parent in person.parents:
-      if parent not in self.members.keys(): continue
-      n += self.find_n_ancestors(self.members[parent])
-    
-    return n
-
   @classmethod
   def from_path(cls, path: str):
     with open(path, 'r') as file:
@@ -40,6 +29,17 @@ class Family():
     
     return cls(**family)
   
+  def find_n_ancestors(self, person: Person) -> int:
+    if person.parents == []: return 0
+    if person.n_ancestors != None: return person.n_ancestors
+    
+    n = 1
+    for parent in person.parents:
+      if parent not in self.members.keys(): continue
+      n += self.find_n_ancestors(self.members[parent])
+    
+    return n
+
   def draw_family_tree(self,
     config: Configuration,
     output_file_path: str
@@ -51,6 +51,3 @@ class Family():
     persons.reverse()
 
     draw_tree(persons, self.name, config, output_file_path)
-
-
-
