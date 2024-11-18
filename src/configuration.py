@@ -1,8 +1,8 @@
 import yaml
 
-from src.config.node_style_config import NodeStyleConfig
-from src.config.person_label_config import PersonLabelConfig
-from src.config.title_config import TitleConfig
+from src.tree_config.node_style_config import NodeStyleConfig
+from src.tree_config.person_label_config import PersonLabelConfig
+from src.tree_config.title_config import TitleConfig
 from src.utils import dict_key_as_object
 
 class Configuration():

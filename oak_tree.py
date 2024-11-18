@@ -1,5 +1,5 @@
-import os
 from argparse import ArgumentParser
+import os
 
 from src.family import Family
 from src.configuration import Configuration

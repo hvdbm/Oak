@@ -1,4 +1,6 @@
+matplotlib
 pandas
 pycountry
 pygraphviz
 pyyaml
+seaborn

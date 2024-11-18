@@ -1,6 +1,8 @@
 
 import json
 
+import pandas as pd
+
 from src.configuration import Configuration
 from src.person import Person
 from src.draw import draw_tree
@@ -39,6 +41,9 @@ class Family():
       n += self.find_n_ancestors(self.members[parent])
     
     return n
+
+  def to_df(self) -> pd.DataFrame:
+    return pd.DataFrame([vars(x) for x in self.members.values()])
 
   def draw_family_tree(self,
     config: Configuration,

@@ -1,6 +1,6 @@
 import pycountry
 
-from src.config.person_label_config import PersonLabelConfig
+from src.tree_config.person_label_config import PersonLabelConfig
 from src.label import bold, newline
 
 class Person():
@@ -9,9 +9,9 @@ class Person():
     last_name: str,
     sex: str,
     birth_year: str,
-    parents: list[str],
-    spouses: list[str],
-    childrens: list[str],
+    parents: list[str] = [],
+    spouses: list[str] = [],
+    childrens: list[str] = [],
     id: str | None = None,
     death_year: str | None = None,
     nickname: str | None = None,
