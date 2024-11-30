@@ -1,4 +1,4 @@
-class NodeStyleConfig():
+class NodeConfig():
   def __init__(self,
     color_by: str | None = None,
     color_by_dict: dict = {},
@@ -16,3 +16,5 @@ class NodeStyleConfig():
     self.default_color = default_color
     self.shape = shape
     self.style = style
+  
+    

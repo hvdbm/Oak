@@ -2,12 +2,12 @@ from argparse import ArgumentParser
 import os
 
 from src.family import Family
-from src.configuration import Configuration
+from src.tree_config.configuration import TreeConfiguration
 
 def main(input_file_path: str, config_file_path: str | None, output_dir: str) -> None:
   if not os.path.exists(output_dir): os.makedirs(output_dir)
 
-  config = Configuration.from_path(config_file_path)
+  config = TreeConfiguration.from_path(config_file_path)
   output_file_path = os.path.join(output_dir, config.filename)
 
   Family.from_path(input_file_path).draw_family_tree(config, output_file_path)

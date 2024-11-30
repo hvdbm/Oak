@@ -3,7 +3,7 @@ import json
 
 import pandas as pd
 
-from src.configuration import Configuration
+from src.tree_config.configuration import TreeConfiguration
 from src.person import Person
 from src.draw import draw_tree
 
@@ -15,7 +15,7 @@ class Family():
     self.name = name
     self.members = members
 
-    for _, value in members.items():
+    for value in members.values():
       value.n_ancestors = self.find_n_ancestors(value)
 
   @classmethod
@@ -43,10 +43,13 @@ class Family():
     return n
 
   def to_df(self) -> pd.DataFrame:
+    """
+    Convert the list of members of the family as a Pandas dataframe with the properties of a Person as columns.
+    """
     return pd.DataFrame([vars(x) for x in self.members.values()])
 
   def draw_family_tree(self,
-    config: Configuration,
+    config: TreeConfiguration,
     output_file_path: str
   ) -> None:
     persons = list(self.members.values())

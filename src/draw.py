@@ -1,24 +1,24 @@
 
 import pygraphviz as pgv
 
-from src.configuration import Configuration, NodeStyleConfig
+from src.tree_config.configuration import TreeConfiguration, NodeConfig
 from src.label import bold, newline
 from src.person import Person
 from src.utils import get_union_name
 
-def get_node_color(person: Person, node_style_config: NodeStyleConfig) -> str:
-  if node_style_config.color_by is None : return node_style_config.default_color
+def get_node_color(person: Person, node_config: NodeConfig) -> str:
+  if node_config.color_by is None : return node_config.default_color
   
-  if node_style_config.color_by in person.__dict__.keys():
-    value = person.__dict__.get(node_style_config.color_by)
-    return node_style_config.color_by_dict.get(value, node_style_config.default_color)
+  if node_config.color_by in person.__dict__.keys():
+    value = person.__dict__.get(node_config.color_by)
+    return node_config.color_by_dict.get(value, node_config.default_color)
   
-  return node_style_config.default_color
+  return node_config.default_color
 
 def draw_tree(
   persons: list[Person],
   title: str, 
-  config: Configuration,
+  config: TreeConfiguration,
   output_file_path: str
 ) -> None:
   G = pgv.AGraph(
@@ -30,20 +30,22 @@ def draw_tree(
     fontsize=config.title_config.font_size
   )
   
-  G.edge_attr['color'] = config.edge_color
-  G.node_attr['shape'] = config.node_style_config.shape
+  G.edge_attr['color'] = config.edge_config.color
+  G.edge_attr['penwidth'] = config.edge_config.penwidth
+
+  G.node_attr['shape'] = config.node_config.shape
 
   subgraphs = {}
 
   for person in persons:
     G.add_node(
       person.id,
-      style=config.node_style_config.style,
-      fillcolor=get_node_color(person, config.node_style_config),
+      style=config.node_config.style,
+      fillcolor=get_node_color(person, config.node_config),
       label=person.get_label(config.person_label_config),
       group=person.id,
-      fontname=config.node_style_config.font,
-      fontsize=config.node_style_config.font_size
+      fontname=config.node_config.font,
+      fontsize=config.node_config.font_size,
     )
 
     if person.parents != []:

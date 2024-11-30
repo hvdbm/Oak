@@ -35,7 +35,16 @@ class Person():
     # Calculated properties
     self.n_ancestors = None
 
-  def get_names_label(self, config: PersonLabelConfig):
+  def get_names_label(self, config: PersonLabelConfig) -> str:
+    """
+    Get the complete name (first name and last name) of a person.
+
+    Parameters:
+      config (PersonLabelConfig): configuration on how to process the different names parts.
+
+    Returns:
+      str: the complete name of a person as a string
+    """
     names = self.first_name
     
     if config.split_names: names += newline()
@@ -47,7 +56,16 @@ class Person():
 
     return names
 
-  def get_label(self, config: PersonLabelConfig):
+  def get_label(self, config: PersonLabelConfig) -> str:
+    """
+    Get the label (names, nickname, birth/death years and nationalities) of a person.
+    
+    Parameters:
+      config (PersonLabelConfig): configuration on how to process the different label parts.
+
+    Returns:
+      str: the label with all the infos of a person.
+    """
     names = self.get_names_label(config)
 
     nickname = f'"{self.nickname}" {newline()}' if config.show_nickname and self.nickname != None else ""
