@@ -1,4 +1,3 @@
-
 import json
 
 import pandas as pd
@@ -16,7 +15,7 @@ class Family():
     self.members = members
 
     for value in members.values():
-      value.n_ancestors = self.find_n_ancestors(value)
+      value.n_descendants = self.find_n_descendants(value)
 
   @classmethod
   def from_path(cls, path: str):
@@ -30,16 +29,15 @@ class Family():
     family["members"] = members_dict
     
     return cls(**family)
-  
-  def find_n_ancestors(self, person: Person) -> int:
-    if person.parents == []: return 0
-    if person.n_ancestors != None: return person.n_ancestors
     
-    n = 1
-    for parent in person.parents:
-      if parent not in self.members.keys(): continue
-      n += self.find_n_ancestors(self.members[parent])
-    
+  def find_n_descendants(self, person: Person) -> int:
+    if person.childrens == []: return 0
+    if person.n_descendants != None: return person.n_descendants
+
+    n = 0
+    for children in person.childrens:
+      if children not in self.members.keys(): continue
+      n += self.find_n_descendants(self.members[children])+1
     return n
 
   def to_df(self) -> pd.DataFrame:
@@ -53,9 +51,7 @@ class Family():
     output_file_path: str
   ) -> None:
     persons = list(self.members.values())
-    persons.sort(key=lambda x: x.birth_year)
-    persons.reverse()
-    persons.sort(key=lambda x: x.n_ancestors)
+    persons.sort(key=lambda x : x.n_descendants)
     persons.reverse()
 
-    draw_tree(persons, self.name, config, output_file_path)
+    draw_tree(persons, self.name, config, output_file_path, self.members)

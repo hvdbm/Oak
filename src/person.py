@@ -33,7 +33,7 @@ class Person():
     self.childrens = childrens
 
     # Calculated properties
-    self.n_ancestors = None
+    self.n_descendants = None
 
   def get_names_label(self, config: PersonLabelConfig) -> str:
     """
@@ -43,7 +43,7 @@ class Person():
       config (PersonLabelConfig): configuration on how to process the different names parts.
 
     Returns:
-      str: the complete name of a person as a string
+      str: the complete name of a person.
     """
     names = self.first_name
     
