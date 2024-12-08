@@ -82,7 +82,7 @@ def draw_tree(
   G = pgv.AGraph(
     splines="ortho",
     bgcolor=config.background_color,
-    label=f"<{bold(title)} {newline()} >",
+    label=f"<{bold(title)} {newline()} >" if title != "" else "",
     labelloc=config.title_config.location,
     fontname=config.title_config.font,
     fontsize=config.title_config.font_size,
