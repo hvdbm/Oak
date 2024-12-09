@@ -15,19 +15,52 @@ def get_node_color(person: Person, node_config: NodeConfig) -> str:
   
   return node_config.default_color
 
+class Generation():
+  def __init__(self, gen_id: int):
+    self.id = gen_id
+    self.members = []
+  
+  def add_member(self, person_id: str):
+    self.members.append(person_id)
+  
+  def add_subgraph_to_tree(self, tree: pgv.AGraph):
+    # Add subgraph
+    tree.add_subgraph(self.members, rank="same")
+
+    # Add invisible edges between the nodes of the subgraph to make sure their order is followed
+    n_members = len(self.members)
+    for n in range(n_members):
+      if n+1 >= n_members: continue
+      first, second = self.members[n], self.members[n+1]
+      if (first, second) in tree.edges(): continue  # Don't replace an alreay existing edge with an invisible one
+      tree.add_edge(first, second, style="invis")
+
+class IntermediateGeneration():
+  def __init__(self, group_id: str, gen_id: int):
+    self.id = group_id
+    self.gen_id = gen_id
+    self.members = []
+  
+  def add_member(self, person_id: str):
+    self.members.append(person_id)
+  
+  def get_order(self):
+    n_member = len(self.members)
+    return self.members[:n_member//2] + [self.id] + self.members[n_member//2:]
+
 def generate_generations(
   person: Person,
   family,
-  generations: dict,
+  generations: dict[Generation],
   current_generation: int,
   already_seen: set,
   tree: pgv.AGraph,
-  childrens_subgraphs: dict
-  ):
-  if current_generation not in generations.keys(): generations[current_generation] = []
+  childrens_subgraphs: dict[IntermediateGeneration]
+):
+  if current_generation not in generations.keys(): generations[current_generation] = Generation(current_generation)
   
   if person.id not in already_seen:
-    generations[current_generation].append(person.id)
+    generations[current_generation].add_member(person.id)
     already_seen.add(person.id)
 
     if person.parents != []:
@@ -42,25 +75,21 @@ def generate_generations(
 
       # Prepare subgraph with all the middle childrens nodes align at the same rank
       if parents_union_name_childrens not in childrens_subgraphs.keys():
-        childrens_subgraphs[parents_union_name_childrens] = [parents_union_name_w_child]
-      else:
-          childrens_subgraphs[parents_union_name_childrens].append(parents_union_name_w_child)
+        childrens_subgraphs[parents_union_name_childrens] = IntermediateGeneration(parents_union_name_childrens, current_generation-1)
+      childrens_subgraphs[parents_union_name_childrens].add_member(parents_union_name_w_child)
 
     # Add spouses to the same generation
     for spouse in person.spouses:
-      if spouse not in already_seen:
-
         # Add intermediate node between spouses
         union_name = f"{get_union_name([person.id, spouse])}/union"
         tree.add_node(union_name, shape="point", group=get_union_name([person.id, spouse]))
         
         # Add intermediate node in generation
-        generations[current_generation].append(union_name)
+        generations[current_generation].add_member(union_name)
 
         # Add spouse to generation
-        generations[current_generation].append(spouse)
+        generations[current_generation].add_member(spouse)
         already_seen.add(spouse)
-
 
         tree.add_edge(person.id, union_name)
         tree.add_edge(union_name, spouse)
@@ -99,6 +128,7 @@ def draw_tree(
 
   current_generation = 0
 
+  # Add person
   for person in persons:
     G.add_node(
       person.id,
@@ -113,22 +143,27 @@ def draw_tree(
       person, family, generations, current_generation, already_seen_members, G, childrens_subgraphs
     )
 
-  for k, v in generations.items():
-    G.add_subgraph(v, rank="same")
+  # Add persons on the same generation
+  for gen in generations.values(): gen.add_subgraph_to_tree(G)
 
-    for n in range(len(v)):
-      if n+1 >= len(v): continue
-      first, second = v[n], v[n+1]
-      if (first, second) in G.edges(): continue
-      G.add_edge(v[n], v[n+1], style="invis")
+  # Add intermediate nodes between generations
+  for n in range(len(generations)):
+    n_order = []
+    
+    for v in childrens_subgraphs.values():
+      if n != v.gen_id: continue
+      v_order = v.get_order()
+      
+      if n_order != []:
+        G.add_edge(n_order[-1], v_order[0], style="invis")  #color="green"
 
-  for k, v in childrens_subgraphs.items():
-    order = v[:len(v)//2] + [k] + v[len(v)//2:]
+      n_order += v_order
 
-    G.add_subgraph(order, rank="same")
-    for n in range(len(order)):
-      if n+1 >= len(order): continue
-      G.add_edge(order[n], order[n+1])
+    G.add_subgraph(n_order, rank="same")
+    for n in range(len(n_order)):
+      if n+1 >= len(n_order): continue
+      if (n_order[n], n_order[n+1]) in G.edges(): continue
+      G.add_edge(n_order[n], n_order[n+1])
 
   G.layout(prog='dot')
   G.draw(output_file_path)
