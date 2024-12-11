@@ -2,9 +2,7 @@ import json
 
 import pandas as pd
 
-from src.tree_config.configuration import TreeConfiguration
 from src.person import Person
-from src.draw import draw_tree
 
 class Family():
   def __init__(self,
@@ -45,13 +43,3 @@ class Family():
     Convert the list of members of the family as a Pandas dataframe with the properties of a Person as columns.
     """
     return pd.DataFrame([vars(x) for x in self.members.values()])
-
-  def draw_family_tree(self,
-    config: TreeConfiguration,
-    output_file_path: str
-  ) -> None:
-    persons = list(self.members.values())
-    persons.sort(key=lambda x : x.n_descendants)
-    persons.reverse()
-
-    draw_tree(persons, self.name, config, output_file_path, self.members)
