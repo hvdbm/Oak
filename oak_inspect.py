@@ -1,20 +1,54 @@
 from argparse import ArgumentParser
 import os
 
+from src.family import Family
+
 def main(input_path: str) -> None:
   is_dir = os.path.isdir(input_path)
+
+  if is_dir:
+    files = os.listdir(input_path)
+    print(files)
+  else:
+    family = Family.from_path(input_path)
 
   print("="*100)
   print(f"📦 Path     : {input_path}")
   print(f"💾 Type     : {'Directory' if is_dir else 'File'}")
   print(f"📁 Files    : TODO")
   print()
-  print(f"👥 Number of persons        : TODO")
+  print(f"👥 Number of persons        : {len(family.members.keys())}")
   print(f"🌐 Number of nationalities  : TODO")
   print(f"📅 Oldest event             : TODO")
   print(f"📅 Most recent event        : TODO")
   print()
+  check_warnings(family)
+  print()
   print(f"📝 Last edit : TODO")
+
+def check_warnings(family: Family) -> None:
+  warnings = []
+
+  for person in family.members.values():
+
+    for parent in person.parents:
+      if parent not in family.members.keys():
+        warnings.append(f'🚫  "{person.id}" has an unknown parent: "{parent}")')
+
+    for spouse in person.spouses:
+      if spouse not in family.members.keys():
+        warnings.append(f'🚫  "{person.id}" has an unknown spouse: "{spouse}")')
+
+    for child in person.childrens:
+      if child not in family.members.keys():
+        warnings.append(f'🚫  "{person.id}" has an unknown child: "{child}")')
+  
+  if len(warnings) > 0:
+    print(f"{len(warnings)} warnings:")
+    for warning in warnings:
+      print(warning)
+  else:
+    print("No warnings.")
 
 if __name__ == "__main__":
   parser = ArgumentParser()
