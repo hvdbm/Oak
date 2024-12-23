@@ -15,10 +15,10 @@ def main(input_path: str) -> None:
   print("="*100)
   print(f"📦 Path     : {input_path}")
   print(f"💾 Type     : {'Directory' if is_dir else 'File'}")
-  print(f"📁 Files    : TODO")
+  print(f"📁 Number of files    : {'TODO' if is_dir else 1}")
   print()
   print(f"👥 Number of persons        : {len(family.members.keys())}")
-  print(f"🌐 Number of nationalities  : TODO")
+  check_nationalities(family)
   print(f"📅 Oldest event             : TODO")
   print(f"📅 Most recent event        : TODO")
   print()
@@ -49,6 +49,23 @@ def check_warnings(family: Family) -> None:
       print(warning)
   else:
     print("No warnings.")
+
+def check_nationalities(family: Family) -> int:
+  # nationalities = set()
+  nationalities_count = {}
+
+
+  for person in family.members.values():
+    for nationality in person.nationalities:
+
+      if nationality not in nationalities_count.keys():
+        nationalities_count[nationality] = 1
+      else:
+        nationalities_count[nationality] += 1
+
+  print(f"🌐 Number of nationalities  : {len(nationalities_count)}")
+  for nationality, count in nationalities_count.items():
+    print(f"   - {nationality}: {count} persons")
 
 if __name__ == "__main__":
   parser = ArgumentParser()
