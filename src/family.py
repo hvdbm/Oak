@@ -17,16 +17,19 @@ class Family():
 
   @classmethod
   def from_path(cls, path: str):
-    with open(path, 'r') as file:
-      family = json.load(file)
-      members_dict = {}
-      for m in family["members"]:
-        person = Person(**m)
-        members_dict[person.id] = person
+    try:
+      with open(path, 'r') as file:
+        family = json.load(file)
+        members_dict = {}
+        for m in family["members"]:
+          person = Person(**m)
+          members_dict[person.id] = person
 
-    family["members"] = members_dict
+      family["members"] = members_dict
     
-    return cls(**family)
+      return cls(**family)
+    except:
+      print(f'Error: Could not read the family from file "{path}"')    
     
   def find_n_descendants(self, person: Person) -> int:
     if person.childrens == []: return 0

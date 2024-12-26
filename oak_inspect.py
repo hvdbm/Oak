@@ -13,18 +13,20 @@ def main(input_path: str) -> None:
     family = Family.from_path(input_path)
 
   print("="*100)
+  
+  print("Files informations:")
   print(f"📦 Path     : {input_path}")
   print(f"💾 Type     : {'Directory' if is_dir else 'File'}")
   print(f"📁 Number of files    : {'TODO' if is_dir else 1}")
   print()
+
+  print(f"Family informations:")
   print(f"👥 Number of persons        : {len(family.members.keys())}")
   check_nationalities(family)
-  print(f"📅 Oldest event             : TODO")
-  print(f"📅 Most recent event        : TODO")
+  check_events(family)
   print()
   check_warnings(family)
-  print()
-  print(f"📝 Last edit : TODO")
+  print("="*100)
 
 def check_warnings(family: Family) -> None:
   warnings = []
@@ -51,9 +53,7 @@ def check_warnings(family: Family) -> None:
     print("No warnings.")
 
 def check_nationalities(family: Family) -> int:
-  # nationalities = set()
   nationalities_count = {}
-
 
   for person in family.members.values():
     for nationality in person.nationalities:
@@ -65,7 +65,18 @@ def check_nationalities(family: Family) -> int:
 
   print(f"🌐 Number of nationalities  : {len(nationalities_count)}")
   for nationality, count in nationalities_count.items():
-    print(f"   - {nationality}: {count} persons")
+    print(f"   - {nationality} : {count} persons ({count/len(family.members.keys())*100:.2f}%)")
+
+def check_events(family: Family) -> None:
+  events = []
+
+  for person in family.members.values():
+    events.append(person.birth_year)
+    if person.death_year != None: events.append(person.death_year)
+
+  events.sort()
+  print(f"📅 Oldest event             : {events[0]}")
+  print(f"📅 Most recent event        : {events[-1]}")
 
 if __name__ == "__main__":
   parser = ArgumentParser()

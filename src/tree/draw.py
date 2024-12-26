@@ -33,7 +33,7 @@ class Generation():
     for n in range(n_members):
       if n+1 >= n_members: continue
       first, second = self.members[n], self.members[n+1]
-      if (first, second) in tree.edges(): continue  # Don't replace an alreay existing edge with an invisible one
+      if (first, second) in tree.edges(): continue  # Don't replace an already existing edge with an invisible one
       tree.add_edge(first, second, style="invis")
 
 class IntermediateGeneration():
@@ -120,7 +120,7 @@ def draw_tree(
     label=f"<{bold(family.name)} {newline()} >" if family.name != "" else "",
     labelloc=config.title_config.location,
     fontname=config.title_config.font,
-    fontsize=config.title_config.font_size,
+    fontsize=config.title_config.font_size
   )
   
   G.edge_attr['color'] = config.edge_config.color

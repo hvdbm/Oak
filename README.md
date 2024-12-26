@@ -8,6 +8,19 @@ Install dependencies with `pip install -r requirements.txt`.
 
 ## Commands
 
+### oak_inspect
+
+Inspect for available data at a path and show a summary of the files, persons and warnings.
+
+```
+usage: oak_inspect.py [-h] --input_path INPUT_PATH
+
+options:
+  -h, --help            show this help message and exit
+  --input_path INPUT_PATH
+                        Path to the family data.
+```
+
 ### oak_tree
 
 Visualize a family tree based on the [Graphviz](https://graphviz.org) software :
