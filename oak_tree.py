@@ -2,15 +2,16 @@ from argparse import ArgumentParser
 import os
 
 from src.family import Family
-from src.tree_config.configuration import TreeConfiguration
+from src.tree.draw import draw_tree, TreeConfiguration
 
 def main(input_file_path: str, config_file_path: str | None, output_dir: str) -> None:
   if not os.path.exists(output_dir): os.makedirs(output_dir)
 
+  family = Family.from_path(input_file_path)
   config = TreeConfiguration.from_path(config_file_path)
   output_file_path = os.path.join(output_dir, config.filename)
 
-  Family.from_path(input_file_path).draw_family_tree(config, output_file_path)
+  draw_tree(family, config, output_file_path)
 
 if __name__ == "__main__":
   parser = ArgumentParser()
