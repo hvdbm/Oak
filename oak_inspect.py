@@ -1,32 +1,32 @@
 from argparse import ArgumentParser
-import os
 
 from src.family import Family
 
 def main(input_path: str) -> None:
-  is_dir = os.path.isdir(input_path)
-
-  if is_dir:
-    files = os.listdir(input_path)
-    print(files)
-  else:
-    family = Family.from_path(input_path)
+  family = Family.from_path(input_path)
 
   print("="*100)
-  
   print("Files informations:")
+  print("="*100)
   print(f"📦 Path     : {input_path}")
-  print(f"💾 Type     : {'Directory' if is_dir else 'File'}")
-  print(f"📁 Number of files    : {'TODO' if is_dir else 1}")
+  print(f"💾 Type     : {'Directory' if family.path_info.is_dir else 'File'}")
+  print(f"📁 Number of files    : {len(family.path_info.files)}")
+  for file in family.path_info.files: print(f"  - {file.split('/')[-1]}")
   print()
 
+  print("="*100)
   print(f"Family informations:")
+  print("="*100)
   print(f"👥 Number of persons        : {len(family.members.keys())}")
   check_nationalities(family)
   check_events(family)
   print()
-  check_warnings(family)
+
   print("="*100)
+  print(f"Validation:")
+  print("="*100)
+  check_warnings(family)
+  print()
 
 def check_warnings(family: Family) -> None:
   warnings = []
@@ -73,6 +73,8 @@ def check_events(family: Family) -> None:
   for person in family.members.values():
     events.append(person.birth_year)
     if person.death_year != None: events.append(person.death_year)
+
+  if len(events) == 0: return
 
   events.sort()
   print(f"📅 Oldest event             : {events[0]}")
