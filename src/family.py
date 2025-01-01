@@ -53,7 +53,7 @@ class Family():
     except Exception as e:
       print(f'Error: Could not read the family from file "{file}": {e}')
     
-    return cls(" & ".join(names), members, path_info)
+    return cls(" / ".join(names), members, path_info)
     
   def find_n_descendants(self, person: Person) -> int:
     """
