@@ -1,4 +1,4 @@
-from src.tree.font_config import FontConfig
+from src.tree.configs.font_config import FontConfig
 
 class NodeConfig(FontConfig):
   def __init__(self,

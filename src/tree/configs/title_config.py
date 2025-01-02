@@ -1,4 +1,4 @@
-from src.tree.font_config import FontConfig
+from src.tree.configs.font_config import FontConfig
 
 class TitleConfig(FontConfig):
   def __init__(self,

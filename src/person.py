@@ -1,6 +1,6 @@
 import pycountry
 
-from src.tree.person_label_config import PersonLabelConfig
+from src.tree.configs.person_label_config import PersonLabelConfig
 from src.label import bold, newline
 
 class Person():
