@@ -1,11 +1,12 @@
-class TitleConfig():
+from src.tree.font_config import FontConfig
+
+class TitleConfig(FontConfig):
   def __init__(self,
-    font: str = "Times-Roman",
-    font_size: float = 20,
     location: str = "t",
-    color: str = "black"
+    font: str | None = None,
+    font_size: float | None = None,
+    font_color: str | None = None
   ):
-    self.font = font
-    self.font_size = font_size
     self.location = location
-    self.color = color
+
+    FontConfig.__init__(self, font, font_size, font_color)

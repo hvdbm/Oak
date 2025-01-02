@@ -118,7 +118,7 @@ def draw_tree(
     splines="ortho",
     bgcolor=config.background_color,
     label=f"<{bold(family.name)} {newline()} >" if family.name != "" else "",
-    fontcolor = config.title_config.color,
+    fontcolor=config.title_config.font_color,
     labelloc=config.title_config.location,
     fontname=config.title_config.font,
     fontsize=config.title_config.font_size
@@ -145,6 +145,7 @@ def draw_tree(
       group=person.id,
       fontname=config.node_config.font,
       fontsize=config.node_config.font_size,
+      fontcolor=config.node_config.font_color
     )
     generate_generations(
       person, family.members, generations, current_generation, already_seen_members, G, childrens_subgraphs
