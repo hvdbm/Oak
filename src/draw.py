@@ -112,6 +112,7 @@ def draw_tree(
     splines="ortho",
     bgcolor=config.background_color,
     label=f"<{bold(title)} {newline()} >" if title != "" else "",
+    fontcolor = config.title_config.color,
     labelloc=config.title_config.location,
     fontname=config.title_config.font,
     fontsize=config.title_config.font_size,
