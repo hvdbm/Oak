@@ -1,10 +1,11 @@
 
 import pygraphviz as pgv
 
-from src.tree_config.configuration import TreeConfiguration, NodeConfig
+from src.tree.configuration import TreeConfiguration, NodeConfig
 from src.label import bold, newline
 from src.person import Person
 from src.utils import get_union_name
+from src.family import Family
 
 def get_node_color(person: Person, node_config: NodeConfig) -> str:
   if node_config.color_by is None : return node_config.default_color
@@ -32,7 +33,7 @@ class Generation():
     for n in range(n_members):
       if n+1 >= n_members: continue
       first, second = self.members[n], self.members[n+1]
-      if (first, second) in tree.edges(): continue  # Don't replace an alreay existing edge with an invisible one
+      if (first, second) in tree.edges(): continue  # Don't replace an already existing edge with an invisible one
       tree.add_edge(first, second, style="invis")
 
 class IntermediateGeneration():
@@ -50,7 +51,7 @@ class IntermediateGeneration():
 
 def generate_generations(
   person: Person,
-  family,
+  family: dict[Person],
   generations: dict[Generation],
   current_generation: int,
   already_seen: set,
@@ -102,19 +103,25 @@ def generate_generations(
       generate_generations(family[children], family, generations, current_generation+1, already_seen, tree, childrens_subgraphs)
 
 def draw_tree(
-  persons: list[Person],
-  title: str, 
+  family: Family,
   config: TreeConfiguration,
   output_file_path: str,
-  family = {}
 ) -> None:
+  
+  # Order persons of the family by n_descendants descending order
+  persons = list(family.members.values())
+  persons.sort(key=lambda x : x.n_descendants)
+  persons.reverse()
+
+  # Init graph
   G = pgv.AGraph(
     splines="ortho",
     bgcolor=config.background_color,
-    label=f"<{bold(title)} {newline()} >" if title != "" else "",
+    label=f"<{bold(family.name)} {newline()} >" if family.name != "" else "",
+    fontcolor=config.title_config.font_color,
     labelloc=config.title_config.location,
     fontname=config.title_config.font,
-    fontsize=config.title_config.font_size,
+    fontsize=config.title_config.font_size
   )
   
   G.edge_attr['color'] = config.edge_config.color
@@ -128,7 +135,7 @@ def draw_tree(
 
   current_generation = 0
 
-  # Add person
+  # Add persons
   for person in persons:
     G.add_node(
       person.id,
@@ -139,18 +146,19 @@ def draw_tree(
       group=person.id,
       fontname=config.node_config.font,
       fontsize=config.node_config.font_size,
+      fontcolor=config.node_config.font_color,
       image= person.image,
       imagepos= "tc" if person.image != "" else "",
       height= 4.5 if person.image != "" else ""
     )
     generate_generations(
-      person, family, generations, current_generation, already_seen_members, G, childrens_subgraphs
+      person, family.members, generations, current_generation, already_seen_members, G, childrens_subgraphs
     )
 
-  # Add persons on the same generation
+  # Add edges and ranks of persons of the same generation
   for gen in generations.values(): gen.add_subgraph_to_tree(G)
 
-  # Add intermediate nodes between generations
+  # Add intermediate nodes and edges between generations
   for n in range(len(generations)):
     n_order = []
     
@@ -159,7 +167,7 @@ def draw_tree(
       v_order = v.get_order()
       
       if n_order != []:
-        G.add_edge(n_order[-1], v_order[0], style="invis")  #color="green"
+        G.add_edge(n_order[-1], v_order[0], style="invis")
 
       n_order += v_order
 

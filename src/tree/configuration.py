@@ -1,9 +1,9 @@
 import yaml
 
-from src.tree_config.edge_config import EdgeConfig
-from src.tree_config.node_config import NodeConfig
-from src.tree_config.person_label_config import PersonLabelConfig
-from src.tree_config.title_config import TitleConfig
+from src.tree.configs.edge_config import EdgeConfig
+from src.tree.configs.node_config import NodeConfig
+from src.tree.configs.person_label_config import PersonLabelConfig
+from src.tree.configs.title_config import TitleConfig
 from src.utils import dict_key_as_object
 
 class TreeConfiguration():
