@@ -7,9 +7,7 @@ class NodeConfig(FontConfig):
     default_color: str = "white", # https://graphviz.org/doc/info/colors.html
     shape: str = "box",
     style: str = "filled",
-    font: str | None = None,
-    font_size: float | None = None,
-    font_color: str | None = None
+    **kwargs
   ):
     self.color_by = color_by
     self.color_by_dict = color_by_dict
@@ -17,6 +15,6 @@ class NodeConfig(FontConfig):
     self.shape = shape
     self.style = style
 
-    FontConfig.__init__(self, font, font_size, font_color)
+    FontConfig.__init__(self, **kwargs)
   
     
