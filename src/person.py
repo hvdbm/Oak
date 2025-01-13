@@ -72,6 +72,6 @@ class Person():
 
     nickname = f'"{self.nickname}" {newline()}' if config.show_nickname and self.nickname != None else ""
     death_year = f"- {self.death_year}" if self.death_year != None else ""
-    nationalities = f"{newline()} {"  ".join([pycountry.countries.get(alpha_2=n).flag for n in self.nationalities])}" if self.nationalities != None and self.nationalities != [] and config.show_nationalities else ""
+    nationalities = f"{newline()}{"  ".join([pycountry.countries.get(alpha_2=n).flag for n in self.nationalities])}" if self.nationalities != None and self.nationalities != [] and config.show_nationalities else ""
 
     return f"<{names} {newline()} {nickname} {self.birth_year} {death_year} {nationalities}>"
