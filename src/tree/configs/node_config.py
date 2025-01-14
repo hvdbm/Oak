@@ -7,6 +7,7 @@ class NodeConfig(FontConfig):
     default_color: str = "white", # https://graphviz.org/doc/info/colors.html
     height_w_img: str = "",
     imagepos: str = "tc",
+    labelloc: str = "",
     shape: str = "box",
     style: str = "filled",
     **kwargs
@@ -16,6 +17,7 @@ class NodeConfig(FontConfig):
     self.default_color = default_color
     self.height_w_img = height_w_img
     self.imagepos = imagepos
+    self.labelloc = labelloc
     self.shape = shape
     self.style = style
 

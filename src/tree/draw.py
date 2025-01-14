@@ -142,7 +142,7 @@ def draw_tree(
       style=config.node_config.style,
       fillcolor=get_node_color(person, config.node_config),
       label=person.get_label(config.person_label_config),
-      labelloc= "b" if person.image != "" else "",
+      labelloc= config.node_config.labelloc if person.image != "" else "",
       group=person.id,
       fontname=config.node_config.font,
       fontsize=config.node_config.font_size,
