@@ -31,7 +31,7 @@ usage: oak_tree.py [-h] --input_path INPUT_PATH [--config_file_path CONFIG_FILE_
 options:
   -h, --help            show this help message and exit
   --input_path INPUT_PATH, -i INPUT_PATH
-                        Path to the file containing the family data.
+                        Path to the family data.
   --config_file_path CONFIG_FILE_PATH
                         Path to the YAML file containing configuration of the family tree. This file is optionnal.
   --output_dir OUTPUT_DIR, -o OUTPUT_DIR
@@ -48,7 +48,7 @@ usage: oak_stats.py [-h] --input_path INPUT_PATH [--output_dir OUTPUT_DIR]
 options:
   -h, --help            show this help message and exit
   --input_path INPUT_PATH, -i INPUT_PATH
-                        Path to the file containing the family data.
+                        Path to the family data.
   --output_dir OUTPUT_DIR, -o OUTPUT_DIR
                         Path to the output directory. Take current folder as default.
 ```
