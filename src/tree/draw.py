@@ -142,10 +142,14 @@ def draw_tree(
       style=config.node_config.style,
       fillcolor=get_node_color(person, config.node_config),
       label=person.get_label(config.person_label_config),
+      labelloc= config.node_config.labelloc if person.image != "" else "",
       group=person.id,
       fontname=config.node_config.font,
       fontsize=config.node_config.font_size,
-      fontcolor=config.node_config.font_color
+      fontcolor=config.node_config.font_color,
+      image=person.image,
+      imagepos= config.node_config.imagepos if person.image != "" else "",
+      height= config.node_config.height_w_img if person.image != "" else ""
     )
     generate_generations(
       person, family.members, generations, current_generation, already_seen_members, G, childrens_subgraphs

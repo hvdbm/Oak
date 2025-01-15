@@ -16,6 +16,7 @@ class Person():
     death_year: str | None = None,
     nickname: str | None = None,
     nationalities: list[str] = [],
+    image: str = ""
   ):
     self.id = id if id != None else f"{first_name} {last_name} ({birth_year})"
 
@@ -26,6 +27,7 @@ class Person():
     self.death_year = death_year
     self.nickname = nickname
     self.nationalities = nationalities
+    self.image = image
 
     # Relationships
     self.parents = parents
@@ -70,6 +72,6 @@ class Person():
 
     nickname = f'"{self.nickname}" {newline()}' if config.show_nickname and self.nickname != None else ""
     death_year = f"- {self.death_year}" if self.death_year != None else ""
-    nationalities = f"{newline()} {"  ".join([pycountry.countries.get(alpha_2=n).flag for n in self.nationalities])}" if self.nationalities != None and self.nationalities != [] and config.show_nationalities else ""
+    nationalities = f"{newline()}{"  ".join([pycountry.countries.get(alpha_2=n).flag for n in self.nationalities])}" if self.nationalities != None and self.nationalities != [] and config.show_nationalities else ""
 
     return f"<{names} {newline()} {nickname} {self.birth_year} {death_year} {nationalities}>"

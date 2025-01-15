@@ -82,7 +82,7 @@ def check_events(family: Family) -> None:
 
 if __name__ == "__main__":
   parser = ArgumentParser()
-  parser.add_argument("--input_path", type=str, required=True, help="Path to the family data.")
+  parser.add_argument("--input_path", "-i", type=str, required=True, help="Path to the family data.")
 
   args = parser.parse_args()
   main(args.input_path)

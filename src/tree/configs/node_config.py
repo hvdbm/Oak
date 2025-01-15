@@ -5,18 +5,22 @@ class NodeConfig(FontConfig):
     color_by: str | None = None,
     color_by_dict: dict = {},
     default_color: str = "white", # https://graphviz.org/doc/info/colors.html
+    height_w_img: str = "",
+    imagepos: str = "tc",
+    labelloc: str = "",
     shape: str = "box",
     style: str = "filled",
-    font: str | None = None,
-    font_size: float | None = None,
-    font_color: str | None = None
+    **kwargs
   ):
     self.color_by = color_by
     self.color_by_dict = color_by_dict
     self.default_color = default_color
+    self.height_w_img = height_w_img
+    self.imagepos = imagepos
+    self.labelloc = labelloc
     self.shape = shape
     self.style = style
 
-    FontConfig.__init__(self, font, font_size, font_color)
+    FontConfig.__init__(self, **kwargs)
   
     
