@@ -2,7 +2,9 @@ from argparse import ArgumentParser
 import os
 
 from src.family import Family
-from src.stats.repartition import plot_pie_repartition
+from src.stats.transform import convert_column_to_int
+from src.stats.evolution import plot_swarmplot
+from src.stats.repartition import plot_pie
 
 def main(input_file_path: str, output_dir: str) -> None:
   if output_dir is not None and not os.path.exists(output_dir): os.makedirs(output_dir)
@@ -10,18 +12,25 @@ def main(input_file_path: str, output_dir: str) -> None:
   family = Family.from_path(input_file_path)
   family_df = family.to_df()
 
-  plot_pie_repartition(
-    family_df["nationalities"].value_counts(),
-    f'Nationalities Repartition of "{family.name}"',
-    os.path.join(output_dir, "nationalities_repartition.png")
-  )
-  
-  plot_pie_repartition(
+  plot_pie(
     family_df["sex"].value_counts(),
-    f'Sex Repartition of "{family.name}"',
+    f'Sex Repartition \n of "{family.name}"',
     os.path.join(output_dir, "sex_repartition.png")
   )
 
+  plot_pie(
+    family_df.explode("nationalities")["nationalities"].value_counts(),
+    f'Nationalities Repartition \n of "{family.name}"',
+    os.path.join(output_dir, "nationalities_repartition.png")
+  )
+
+  plot_swarmplot(
+    convert_column_to_int(family_df.explode("nationalities"), "birth_year"),
+    "birth_year",
+    "nationalities",
+    f'Evolution of Nationalities \n of "{family.name}" in time',
+    os.path.join(output_dir, "nationalities_evolution.png")
+  )
 
 if __name__ == "__main__":
   parser = ArgumentParser()
