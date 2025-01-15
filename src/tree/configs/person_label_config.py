@@ -1,7 +1,7 @@
 class PersonLabelConfig():
   def __init__(self,
     bold_names: bool = True,
-    show_nationalities: bool = False,
+    show_nationalities: bool = True,
     show_nickname: bool = True,
     split_names: bool = False,
     upper_last_name: bool = False
