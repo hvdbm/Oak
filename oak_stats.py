@@ -3,7 +3,7 @@ import os
 
 from src.family import Family
 from src.stats.transform import convert_column_to_int
-from src.stats.evolution import plot_swarmplot
+from src.stats.evolution import plot_swarm
 from src.stats.repartition import plot_pie
 
 def main(input_file_path: str, output_dir: str) -> None:
@@ -24,7 +24,7 @@ def main(input_file_path: str, output_dir: str) -> None:
     os.path.join(output_dir, "nationalities_repartition.png")
   )
 
-  plot_swarmplot(
+  plot_swarm(
     convert_column_to_int(family_df.explode("nationalities"), "birth_year"),
     "birth_year",
     "nationalities",

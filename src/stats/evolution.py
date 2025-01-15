@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-def plot_swarmplot(data: pd.DataFrame, x: str, y: str, title: str, output_path: str) -> None:
+def plot_swarm(data: pd.DataFrame, x: str, y: str, title: str, output_path: str) -> None:
   """
   Plot a swarmplot of the repartition of two variables.
 
