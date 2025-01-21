@@ -1,32 +1,36 @@
 from argparse import ArgumentParser
 import os
 
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
-
 from src.family import Family
+from src.stats.transform import convert_column_to_int
+from src.stats.evolution import plot_swarm
+from src.stats.repartition import plot_pie
 
 def main(input_path: str, output_dir: str) -> None:
   if output_dir is not None and not os.path.exists(output_dir): os.makedirs(output_dir)
 
-  family = Family.from_path(input_path)
+  family = Family.from_path(input_file_path)
+  family_df = family.to_df()
 
-  plot_sex_repartition(family.to_df(), f'Sex Repartition of "{family.name}"', output_dir)
-
-
-def plot_sex_repartition(df: pd.DataFrame, title: str, output_dir: str):
-  values_count = df["sex"].value_counts()
-
-  plt.pie(
-    values_count.values,
-    labels=values_count.keys(),
-    autopct='%1.1f%%',
-    startangle=90,
-    colors=sns.color_palette('Set2'),
+  plot_pie(
+    family_df["sex"].value_counts(),
+    f'Sex Repartition \n of "{family.name}"',
+    os.path.join(output_dir, "sex_repartition.png")
   )
-  plt.title(title, weight='bold')
-  plt.savefig(os.path.join(output_dir, "sex_repartition.png"))
+
+  plot_pie(
+    family_df.explode("nationalities")["nationalities"].value_counts(),
+    f'Nationalities Repartition \n of "{family.name}"',
+    os.path.join(output_dir, "nationalities_repartition.png")
+  )
+
+  plot_swarm(
+    convert_column_to_int(family_df.explode("nationalities"), "birth_year"),
+    "birth_year",
+    "nationalities",
+    f'Evolution of Nationalities \n of "{family.name}" in time',
+    os.path.join(output_dir, "nationalities_evolution.png")
+  )
 
 if __name__ == "__main__":
   parser = ArgumentParser()

@@ -52,7 +52,7 @@ class Person():
     if config.split_names: names += newline()
     
     last_name = self.last_name.upper() if config.upper_last_name else self.last_name
-    names += " " + last_name
+    names += f" {last_name}"
 
     if config.bold_names: names = bold(names)
 
