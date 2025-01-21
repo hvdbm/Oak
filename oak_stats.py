@@ -1,15 +1,14 @@
 from argparse import ArgumentParser
 import os
 
-import matplotlib.pyplot as plt
-
 from src.family import Family
 from src.stats.transform import convert_column_to_int
 from src.stats.evolution import plot_swarm
 from src.stats.repartition import plot_pie, plot_bar
 
 def main(input_path: str, output_dir: str) -> None:
-  if output_dir is not None and not os.path.exists(output_dir): os.makedirs(output_dir)
+  output_dir += "/stats"
+  if not os.path.exists(output_dir): os.makedirs(output_dir)
 
   family = Family.from_path(input_path)
   family_df = family.to_df()
@@ -52,7 +51,7 @@ if __name__ == "__main__":
   parser = ArgumentParser()
 
   parser.add_argument("--input_path", "-i", type=str, required=True, help="Path to the file containing the family data.")
-  parser.add_argument("--output_dir", "-o", type=str, help="Path to the output directory. Take current folder as default.")
+  parser.add_argument("--output_dir", "-o", type=str, default=".", help="Path to the output directory. Take current folder as default.")
 
   args = parser.parse_args()
   main(args.input_path, args.output_dir)

@@ -42,21 +42,11 @@ def plot_bar(value_counts: pd.Series, title: str, output_path: str, horizontal: 
     None
   """
   plt.subplots(figsize=FIG_SIZE)
+  value_counts = value_counts.sort_values(ascending=True) # Sort by count
 
-  # Sort by count 
-  value_counts = value_counts.sort_values(ascending=True)
-
-  if horizontal:
-    plt.barh(
-      value_counts.keys(),
-      value_counts.values,
-    )
-  else:
-    plt.bar(
-      value_counts.keys(),
-      value_counts.values,
-    )
-
+  if horizontal: plt.barh(value_counts.keys(), value_counts.values)
+  else: plt.bar(value_counts.keys(), value_counts.values)
+  
   plt.title(title, weight='bold')
   plt.savefig(output_path)
   plt.close()
