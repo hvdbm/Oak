@@ -35,15 +35,15 @@ def check_warnings(family: Family) -> None:
 
     for parent in person.parents:
       if parent not in family.members.keys():
-        warnings.append(f'🚫  "{person.id}" has an unknown parent: "{parent}")')
+        warnings.append(f'🚫  "{person.id}" has an unknown parent: "{parent}"')
 
     for spouse in person.spouses:
       if spouse not in family.members.keys():
-        warnings.append(f'🚫  "{person.id}" has an unknown spouse: "{spouse}")')
+        warnings.append(f'🚫  "{person.id}" has an unknown spouse: "{spouse}"')
 
     for child in person.childrens:
       if child not in family.members.keys():
-        warnings.append(f'🚫  "{person.id}" has an unknown child: "{child}")')
+        warnings.append(f'🚫  "{person.id}" has an unknown child: "{child}"')
   
   if len(warnings) > 0:
     print(f"{len(warnings)} warnings:")
