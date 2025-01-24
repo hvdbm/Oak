@@ -1,7 +1,6 @@
 import pygraphviz as pgv
 
 from src.tree.configuration import TreeConfiguration, NodeConfig
-from src.tree.label import replace_newline
 from src.person import Person
 from src.utils import get_union_name
 from src.family import Family
@@ -140,7 +139,7 @@ def draw_tree(
       person.id,
       style=config.node_config.style,
       fillcolor=get_node_color(person, config.node_config),
-      label=f"<{replace_newline(person.get_label(config.person_label_config))}>",
+      label=config.person_label_config.get_label(person),
       labelloc=config.node_config.labelloc if person.image != "" else "",
       group=person.id,
       fontname=config.node_config.font,
