@@ -1,7 +1,7 @@
 import pycountry
 
 from src.tree.configs.person_label_config import PersonLabelConfig
-from src.label import bold, newline
+from src.tree.label import bold
 
 class Person():
   def __init__(self,
@@ -49,7 +49,7 @@ class Person():
     """
     names = self.first_name
     
-    if config.split_names: names += newline()
+    if config.split_names: names += "\n"
     
     last_name = self.last_name.upper() if config.upper_last_name else self.last_name
     names += f" {last_name}"
@@ -70,8 +70,8 @@ class Person():
     """
     names = self.get_names_label(config)
 
-    nickname = f'"{self.nickname}" {newline()}' if config.show_nickname and self.nickname != None else ""
+    nickname = f'"{self.nickname}" \n' if config.show_nickname and self.nickname != None else ""
     death_year = f"- {self.death_year}" if self.death_year != None else ""
-    nationalities = f"{newline()}{"  ".join([pycountry.countries.get(alpha_2=n).flag for n in self.nationalities])}" if self.nationalities != None and self.nationalities != [] and config.show_nationalities else ""
+    nationalities = f"\n{"  ".join([pycountry.countries.get(alpha_2=n).flag for n in self.nationalities])}" if self.nationalities != None and self.nationalities != [] and config.show_nationalities else ""
 
-    return f"<{names} {newline()} {nickname} {self.birth_year} {death_year} {nationalities}>"
+    return f"{names} \n {nickname} {self.birth_year} {death_year} {nationalities}"
