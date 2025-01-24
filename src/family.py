@@ -14,7 +14,7 @@ class FamilyPathInfos():
 
 class Family():
   def __init__(self,
-    name: str = "",
+    name: str | None = None,
     members: dict[str, Person] = {},
     path_info: FamilyPathInfos = None
   ):
@@ -49,7 +49,7 @@ class Family():
           for m in family["members"]:
             person = Person(**m)
             members[person.id] = person
-          names.append(family["name"])
+          if family["name"] is not None : names.append(family["name"])
     except Exception as e:
       print(f'Error: Could not read the family from file "{file}": {e}')
     
