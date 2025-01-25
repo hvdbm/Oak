@@ -9,7 +9,7 @@ from src.stats.repartition import plot_pie, plot_bar
 def main(input_path: str, output_dir: str) -> None:
   output_dir += "/stats"
   if not os.path.exists(output_dir): os.makedirs(output_dir)
-
+  
   family = Family.from_path(input_path)
   family_df = family.to_df()
 
