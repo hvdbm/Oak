@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
+from . import FIG_SIZE
+
 def plot_swarm(data: pd.DataFrame, x: str, y: str, title: str, output_path: str) -> None:
   """
   Plot a swarmplot of the repartition of two variables.
@@ -16,6 +18,7 @@ def plot_swarm(data: pd.DataFrame, x: str, y: str, title: str, output_path: str)
   Returns:
     None
   """
+  plt.subplots(figsize=FIG_SIZE)
   sns.set_palette("Set2")
   sns.swarmplot(x=x, y=y, data=data, hue=y)
   plt.title(title, weight='bold')
