@@ -1,11 +1,15 @@
-
 import pygraphviz as pgv
 
 from src.tree.configuration import TreeConfiguration, NodeConfig
 from src.label import bold, newline
 from src.person import Person
-from src.utils import get_union_name
 from src.family import Family
+
+def get_union_name(parents: list[str]) -> str:
+  """
+  Get the union name of list of parents.
+  """
+  return " & ".join(sorted(parents))
 
 def get_node_color(person: Person, node_config: NodeConfig) -> str:
   if node_config.color_by is None : return node_config.default_color
@@ -66,8 +70,9 @@ def generate_generations(
 
     if person.parents != []:
       # Add parents intermediate node
-      parents_union_name_childrens = f"{get_union_name(person.parents)}/childrens"
-      tree.add_node(parents_union_name_childrens, shape="point", group=get_union_name(person.parents))
+      union_name = get_union_name(person.parents)
+      parents_union_name_childrens = f"{union_name}/childrens"
+      tree.add_node(parents_union_name_childrens, shape="point", group=get_union_name(union_name))
       
       # Add middle childrens nodes and edges
       parents_union_name_w_child = f"{parents_union_name_childrens}/{person.id}"
@@ -94,10 +99,15 @@ def generate_generations(
 
         tree.add_edge(person.id, union_name)
         tree.add_edge(union_name, spouse)
-      
+        
         if person.childrens != []:
           parents_union_name = f"{get_union_name([person.id, spouse])}/childrens"
           tree.add_edge(union_name, parents_union_name)
+
+    # Special case : if have a person have childrens but no spouse
+    if len(person.spouses) == 0 and len(person.childrens) != 0:
+      parents_name = f"{get_union_name([person.id])}/childrens"
+      tree.add_edge(person.id, parents_name)
 
     for children in person.childrens:
       generate_generations(family[children], family, generations, current_generation+1, already_seen, tree, childrens_subgraphs)
