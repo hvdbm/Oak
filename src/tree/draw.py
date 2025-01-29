@@ -72,7 +72,7 @@ def generate_generations(
       # Add parents intermediate node
       union_name = get_union_name(person.parents)
       parents_union_name_childrens = f"{union_name}/childrens"
-      tree.add_node(parents_union_name_childrens, shape="point", group=get_union_name(union_name))
+      tree.add_node(parents_union_name_childrens, shape="point", group=union_name)
       
       # Add middle childrens nodes and edges
       parents_union_name_w_child = f"{parents_union_name_childrens}/{person.id}"
@@ -104,7 +104,7 @@ def generate_generations(
           parents_union_name = f"{get_union_name([person.id, spouse])}/childrens"
           tree.add_edge(union_name, parents_union_name)
 
-    # Special case : if have a person have childrens but no spouse
+    # Special case : if a person have childrens but no spouse
     if len(person.spouses) == 0 and len(person.childrens) != 0:
       parents_name = f"{get_union_name([person.id])}/childrens"
       tree.add_edge(person.id, parents_name)
