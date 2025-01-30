@@ -1,16 +1,21 @@
 import glob
-import json
 import os
 
 import pandas as pd
 
 from src.person import Person
+from src.utils import ACCEPTED_EXTENSIONS, read_file_as_dict
 
 class FamilyPathInfos():
   def __init__(self, path: str):
     self.path = path
     self.is_dir = os.path.isdir(path)
-    self.files = glob.glob(f'{path}/*.json') if self.is_dir else [path]
+    if self.is_dir:
+      self.files = []
+      for extension in ACCEPTED_EXTENSIONS:
+        self.files += glob.glob(f'{path}/*.{extension}')
+    else:
+      self.files = [path]
 
 class Family():
   def __init__(self,
@@ -44,12 +49,11 @@ class Family():
 
     try:
       for file in path_info.files:
-        with open(file, 'r') as f:
-          family = json.load(f)
-          for m in family["members"]:
-            person = Person(**m)
-            members[person.id] = person
-          if "name" in family.keys() : names.append(family["name"])
+        family = read_file_as_dict(file)
+        for m in family["members"]:
+          person = Person(**m)
+          members[person.id] = person
+        if "name" in family.keys() : names.append(family["name"])
     except Exception as e:
       print(f'Error: Could not read the family from file "{file}": {e}')
     
