@@ -91,6 +91,8 @@ def generate_generations(
 
         # Modify the group of the person node to union_name
         tree.get_node(parents_union_name_childrens).attr['group'] = person.id
+        if f"{union_name}/union" in tree.nodes(): tree.get_node(f"{union_name}/union").attr['group'] = person.id
+
       else:
         parents_union_name_w_child = f"{parents_union_name_childrens}/{person.id}"
         tree.add_node(parents_union_name_w_child, shape="point", group=person.id)
