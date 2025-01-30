@@ -53,6 +53,12 @@ class IntermediateGeneration():
     n_member = len(self.members)
     return self.members[:n_member//2] + [self.id] + self.members[n_member//2:]
 
+def is_only_child(parents: list[str], family: dict[Person]) -> bool:
+  for parent in parents:
+    if len(family[parent].childrens) == 1: return True
+  
+  return False
+
 def generate_generations(
   person: Person,
   family: dict[Person],
@@ -73,16 +79,24 @@ def generate_generations(
       union_name = get_union_name(person.parents)
       parents_union_name_childrens = f"{union_name}/childrens"
       tree.add_node(parents_union_name_childrens, shape="point", group=union_name)
-      
-      # Add middle childrens nodes and edges
-      parents_union_name_w_child = f"{parents_union_name_childrens}/{person.id}"
-      tree.add_node(parents_union_name_w_child, shape="point", group=person.id)
-      tree.add_edge(parents_union_name_w_child, person.id)
 
       # Prepare subgraph with all the middle childrens nodes align at the same rank
       if parents_union_name_childrens not in childrens_subgraphs.keys():
         childrens_subgraphs[parents_union_name_childrens] = IntermediateGeneration(parents_union_name_childrens, current_generation-1)
-      childrens_subgraphs[parents_union_name_childrens].add_member(parents_union_name_w_child)
+      
+      # Add middle childrens nodes and edges
+      if is_only_child(person.parents, family):
+        # Special case : the person is the only child, no need to add intermediate nodes
+        parents_union_name_w_child = parents_union_name_childrens
+        tree.add_edge(parents_union_name_w_child, person.id)
+
+        # Modify the group of the person node to union_name
+        tree.get_node(parents_union_name_childrens).attr['group'] = person.id
+      else:
+        parents_union_name_w_child = f"{parents_union_name_childrens}/{person.id}"
+        tree.add_node(parents_union_name_w_child, shape="point", group=person.id)
+        tree.add_edge(parents_union_name_w_child, person.id)
+        childrens_subgraphs[parents_union_name_childrens].add_member(parents_union_name_w_child)
 
     # Add spouses to the same generation
     for spouse in person.spouses:
@@ -101,13 +115,11 @@ def generate_generations(
         tree.add_edge(union_name, spouse)
         
         if person.childrens != []:
-          parents_union_name = f"{get_union_name([person.id, spouse])}/childrens"
-          tree.add_edge(union_name, parents_union_name)
+          tree.add_edge(union_name, f"{get_union_name([person.id, spouse])}/childrens")
 
     # Special case : if a person have childrens but no spouse
     if len(person.spouses) == 0 and len(person.childrens) != 0:
-      parents_name = f"{get_union_name([person.id])}/childrens"
-      tree.add_edge(person.id, parents_name)
+      tree.add_edge(person.id, f"{get_union_name([person.id])}/childrens")
 
     for children in person.childrens:
       generate_generations(family[children], family, generations, current_generation+1, already_seen, tree, childrens_subgraphs)
