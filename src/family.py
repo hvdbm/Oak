@@ -14,7 +14,7 @@ class FamilyPathInfos():
 
 class Family():
   def __init__(self,
-    name: str = "",
+    name: str | None = None,
     members: dict[str, Person] = {},
     path_info: FamilyPathInfos = None
   ):
@@ -49,11 +49,12 @@ class Family():
           for m in family["members"]:
             person = Person(**m)
             members[person.id] = person
-          names.append(family["name"])
+          if "name" in family.keys() : names.append(family["name"])
     except Exception as e:
       print(f'Error: Could not read the family from file "{file}": {e}')
     
-    return cls(" / ".join(names), members, path_info)
+    names = " / ".join(names) if len(names) > 0 else None
+    return cls(names, members, path_info)
     
   def find_n_descendants(self, person: Person) -> int:
     """

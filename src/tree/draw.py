@@ -1,7 +1,6 @@
 import pygraphviz as pgv
 
 from src.tree.configuration import TreeConfiguration, NodeConfig
-from src.label import bold, newline
 from src.person import Person
 from src.family import Family
 
@@ -139,7 +138,7 @@ def draw_tree(
   G = pgv.AGraph(
     splines="ortho",
     bgcolor=config.background_color,
-    label=f"<{bold(family.name)} {newline()} >" if family.name != "" else "",
+    label=config.title_config.get_label(family.name),
     fontcolor=config.title_config.font_color,
     labelloc=config.title_config.location,
     fontname=config.title_config.font,
@@ -163,15 +162,15 @@ def draw_tree(
       person.id,
       style=config.node_config.style,
       fillcolor=get_node_color(person, config.node_config),
-      label=person.get_label(config.person_label_config),
-      labelloc= config.node_config.labelloc if person.image != "" else "",
+      label=config.person_label_config.get_label(person),
+      labelloc=config.node_config.labelloc if person.image != "" else "",
       group=person.id,
       fontname=config.node_config.font,
       fontsize=config.node_config.font_size,
       fontcolor=config.node_config.font_color,
       image=person.image,
-      imagepos= config.node_config.imagepos if person.image != "" else "",
-      height= config.node_config.height_w_img if person.image != "" else ""
+      imagepos=config.node_config.imagepos if person.image != "" else "",
+      height=config.node_config.height_w_img if person.image != "" else ""
     )
     generate_generations(
       person, family.members, generations, current_generation, already_seen_members, G, childrens_subgraphs
