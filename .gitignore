@@ -4,3 +4,6 @@ __pycache__
 *.yml
 *.png
 *.csv
+
+# Exceptions
+!.github/workflows/*.yml
