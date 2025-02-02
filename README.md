@@ -6,6 +6,10 @@ Group of tools to work with genealogical data.
 
 Install dependencies with `pip install -r requirements.txt`.
 
+## Data
+
+The data is expected to follow the [`Family`](https://github.com/hvdbm/Oak/blob/main/src/family.py) and [`Person`](https://github.com/hvdbm/Oak/blob/main/src/person.py) classes. Current accepted files extensions are `JSON` and `YAML`.
+
 ## Commands
 
 ### oak_inspect
