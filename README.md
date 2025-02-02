@@ -21,7 +21,7 @@ usage: oak_inspect.py [-h] --input_path INPUT_PATH
 
 options:
   -h, --help            show this help message and exit
-  --input_path INPUT_PATH
+  --input_path INPUT_PATH, -i INPUT_PATH
                         Path to the family data.
 ```
 
@@ -56,4 +56,3 @@ options:
   --output_dir OUTPUT_DIR, -o OUTPUT_DIR
                         Path to the output directory. Take current folder as default.
 ```
-
