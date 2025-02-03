@@ -34,6 +34,8 @@ class PersonLabelConfig():
     last_name = person.last_name.upper() if self.upper_last_name else person.last_name
     names += f" {last_name}"
 
+    if person.suffix != None: names += f" {person.suffix}"
+
     if self.bold_names: names = bold(names)
 
     return names

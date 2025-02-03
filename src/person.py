@@ -11,7 +11,8 @@ class Person():
     death_year: str | None = None,
     nickname: str | None = None,
     nationalities: list[str] = [],
-    image: str = ""
+    image: str = "",
+    suffix: str | None = None
   ):
     self.id = id if id != None else f"{first_name} {last_name} ({birth_year})"
 
@@ -23,6 +24,7 @@ class Person():
     self.nickname = nickname
     self.nationalities = nationalities
     self.image = image
+    self.suffix = suffix
 
     # Relationships
     self.parents = parents
