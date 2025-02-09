@@ -6,11 +6,27 @@ from src.family import Family
 
 def get_union_name(parents: list[str]) -> str:
   """
-  Get the union name of list of parents.
+  Get the union name of parents.
+
+  Parameters:
+    parents (list[str]): the list of ids of the parents of a person.
+
+  Returns:
+    str: the union name of the parents.
   """
   return " & ".join(sorted(parents))
 
 def get_node_color(person: Person, node_config: NodeConfig) -> str:
+  """
+  Get the color of a node based on the node configuration. If no color_by is specified or used, the default color is returned.
+
+  Parameters:
+    person (Person): the person to get the color from.
+    node_config (NodeConfig): the node configuration.
+
+  Returns:
+    str: the color of the node.
+  """
   if node_config.color_by is None : return node_config.default_color
   
   if node_config.color_by in person.__dict__.keys():
@@ -53,70 +69,114 @@ class IntermediateGeneration():
     return self.members[:n_member//2] + [self.id] + self.members[n_member//2:]
 
 def is_only_child(parents: list[str], family: dict[Person]) -> bool:
+  """
+  Check if the person is the only child of the union of his parents.
+
+  Parameters:
+    parents (list[str]): the list of parents of the person.
+    family (dict[Person]): all the family members.
+  
+  Returns:
+    bool: True if the person is the only child of the union of his parents, False otherwise.
+  """
   for parent in parents:
     if len(family[parent].childrens) == 1: return True
   
   return False
+
+def add_parents_to_tree(
+  person: Person,
+  family: dict[Person],
+  generations: dict[Generation],
+  current_generation: int,
+  already_seen: set[str],
+  tree: pgv.AGraph,
+  childrens_subgraphs: dict[IntermediateGeneration]
+) -> None:
+  """
+  Add the parents of a person to the tree. The nodes of the parents are added to the previous generation and 
+  the edges are drawn between the parents and the person, with the necessary intermediate nodes.
+
+  Parameters:
+    person (Person): the person to add the parents from.
+    family (dict[Person]): all the family members.
+    generations (dict[Generation]): all the generations of the family.
+    current_generation (int): the current generation.
+    already_seen (set[str]): the set of already seen persons.
+    tree (pgv.AGraph): the graphviz tree to draw the parents nodes and edges to.
+    childrens_subgraphs (dict[IntermediateGeneration]): the intermediate nodes between the parents and the childrens of the parents.
+  
+  Returns:
+    None
+  """
+  if person.parents == []: return
+
+  # Add parents intermediate node
+  union_name = get_union_name(person.parents)
+  parents_union_name_childrens = f"{union_name}/childrens"
+  tree.add_node(parents_union_name_childrens, shape="point", group=union_name)
+
+  # Prepare subgraph with all the middle childrens nodes align at the same rank
+  if parents_union_name_childrens not in childrens_subgraphs.keys():
+    childrens_subgraphs[parents_union_name_childrens] = IntermediateGeneration(parents_union_name_childrens, current_generation-1)
+
+  # Add middle childrens nodes and edges
+  if is_only_child(person.parents, family):
+    # Special case : the person is the only child, no need to add intermediate nodes
+    parents_union_name_w_child = parents_union_name_childrens
+    tree.add_edge(parents_union_name_w_child, person.id)
+
+    # Modify the group of the person node to union_name
+    tree.get_node(parents_union_name_childrens).attr['group'] = person.id
+    if f"{union_name}/union" in tree.nodes(): tree.get_node(f"{union_name}/union").attr['group'] = person.id
+  else:
+    parents_union_name_w_child = f"{parents_union_name_childrens}/{person.id}"
+    tree.add_node(parents_union_name_w_child, shape="point", group=person.id)
+    tree.add_edge(parents_union_name_w_child, person.id)
+    childrens_subgraphs[parents_union_name_childrens].add_member(parents_union_name_w_child)
+
+  # Add parents to the previous generation
+  for parent in person.parents:
+    generate_generations(family[parent], family, generations, current_generation-1, already_seen, tree, childrens_subgraphs)
 
 def generate_generations(
   person: Person,
   family: dict[Person],
   generations: dict[Generation],
   current_generation: int,
-  already_seen: set,
+  already_seen: set[str],
   tree: pgv.AGraph,
   childrens_subgraphs: dict[IntermediateGeneration]
-):
+) -> None:
   if current_generation not in generations.keys(): generations[current_generation] = Generation(current_generation)
   
   if person.id not in already_seen:
     generations[current_generation].add_member(person.id)
     already_seen.add(person.id)
 
-    if person.parents != []:
-      # Add parents intermediate node
-      union_name = get_union_name(person.parents)
-      parents_union_name_childrens = f"{union_name}/childrens"
-      tree.add_node(parents_union_name_childrens, shape="point", group=union_name)
-
-      # Prepare subgraph with all the middle childrens nodes align at the same rank
-      if parents_union_name_childrens not in childrens_subgraphs.keys():
-        childrens_subgraphs[parents_union_name_childrens] = IntermediateGeneration(parents_union_name_childrens, current_generation-1)
-      
-      # Add middle childrens nodes and edges
-      if is_only_child(person.parents, family):
-        # Special case : the person is the only child, no need to add intermediate nodes
-        parents_union_name_w_child = parents_union_name_childrens
-        tree.add_edge(parents_union_name_w_child, person.id)
-
-        # Modify the group of the person node to union_name
-        tree.get_node(parents_union_name_childrens).attr['group'] = person.id
-        if f"{union_name}/union" in tree.nodes(): tree.get_node(f"{union_name}/union").attr['group'] = person.id
-
-      else:
-        parents_union_name_w_child = f"{parents_union_name_childrens}/{person.id}"
-        tree.add_node(parents_union_name_w_child, shape="point", group=person.id)
-        tree.add_edge(parents_union_name_w_child, person.id)
-        childrens_subgraphs[parents_union_name_childrens].add_member(parents_union_name_w_child)
+    add_parents_to_tree(person, family, generations, current_generation, already_seen, tree, childrens_subgraphs)
 
     # Add spouses to the same generation
     for spouse in person.spouses:
-        # Add intermediate node between spouses
-        union_name = f"{get_union_name([person.id, spouse])}/union"
-        tree.add_node(union_name, shape="point", group=get_union_name([person.id, spouse]))
+      # Add intermediate node between spouses
+      union_name = f"{get_union_name([person.id, spouse])}/union"
+      tree.add_node(union_name, shape="point", group=get_union_name([person.id, spouse]))
         
-        # Add intermediate node in generation
-        generations[current_generation].add_member(union_name)
+      # Add intermediate node in generation
+      generations[current_generation].add_member(union_name)
 
-        # Add spouse to generation
-        generations[current_generation].add_member(spouse)
-        already_seen.add(spouse)
+      # Add spouse to generation
+      generations[current_generation].add_member(spouse)
+      already_seen.add(spouse)
 
-        tree.add_edge(person.id, union_name)
-        tree.add_edge(union_name, spouse)
+      tree.add_edge(person.id, union_name)
+      tree.add_edge(union_name, spouse)
         
-        if person.childrens != []:
-          tree.add_edge(union_name, f"{get_union_name([person.id, spouse])}/childrens")
+      if person.childrens != []:
+        tree.add_edge(union_name, f"{get_union_name([person.id, spouse])}/childrens")
+
+      # Add spouse's parents to the previous generation
+      add_parents_to_tree(family[spouse], family, generations, current_generation, already_seen, tree, childrens_subgraphs)
 
     # Special case : if a person have childrens but no spouse
     if len(person.spouses) == 0 and len(person.childrens) != 0:
@@ -130,7 +190,6 @@ def draw_tree(
   config: TreeConfiguration,
   output_file_path: str,
 ) -> None:
-  
   # Order persons of the family by n_descendants descending order
   persons = list(family.members.values())
   persons.sort(key=lambda x : x.n_descendants)
