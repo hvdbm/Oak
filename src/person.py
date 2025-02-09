@@ -12,12 +12,14 @@ class Person():
     nickname: str | None = None,
     nationalities: list[str] = [],
     image: str = "",
-    suffix: str | None = None
+    suffix: str | None = None,
+    middle_names: list[str] = []
   ):
     self.id = id if id != None else f"{first_name} {last_name} ({birth_year})"
 
     self.first_name = first_name
     self.last_name = last_name
+    self.middle_names = middle_names
     self.sex = sex
     self.birth_year = birth_year
     self.death_year = death_year

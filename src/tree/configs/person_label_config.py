@@ -1,7 +1,59 @@
 import pycountry
 
 from src.person import Person
-from src.tree.label import bold, newline
+from src.tree.label import bold, italic, newline
+
+class LabelConfig():
+  def __init__(self,
+    enabled: bool = True,
+    bold: bool = False,
+    italic: bool = False,
+    newline: bool = False
+  ):
+    self.enabled = enabled
+    self.bold = bold
+    self.italic = italic
+    self.newline = newline
+
+# class PersonLabelConfig2():
+#   def __init__(self, transforms: dict[str, LabelConfig]):
+#     self.transforms = transforms
+
+#     # self.transforms.items()
+
+#   def generate_str(self, text: str | list[str] , key: str) -> str:
+#     config = self.transforms.get(key, LabelConfig())
+
+#     if not config.enabled: return ""
+
+#     # If the text is a list, join it with a space
+#     if isinstance(text, list): text = " ".join(text)
+
+#     if config.bold: text = bold(text)
+#     if config.italic: text = italic(text)
+#     if config.newline: text = newline(text)
+
+#     return text
+  
+#   def get_names_label(self, person: Person):
+#     person_dict = person.__dict__
+
+#     names = ""
+
+#     for key in ["first_name", "middle_names", "last_name", "suffix"]:
+#       names += self.generate_str(person_dict[key], key)
+
+#     return names
+
+#   def get_nationalities_label(self, person: Person) -> str:
+#     person_dict = person.__dict__
+
+#     nationalities = self.generate_str(person_dict["nationalities"], "nationalities")
+
+#     return nationalities
+
+#   def get_label(self, person: Person) -> str:
+#     get_names_label
 
 class PersonLabelConfig():
   def __init__(self,
@@ -72,4 +124,4 @@ class PersonLabelConfig():
     death_year = f"- {person.death_year}" if person.death_year != None else ""
     nationalities = self.get_nationalities_label(person)
 
-    return f"<{names} {newline()} {nickname} {person.birth_year} {death_year} {nationalities}>"
+    return f"<{names}{newline()} {nickname} {person.birth_year} {death_year} {nationalities}>"
