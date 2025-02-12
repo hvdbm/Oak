@@ -249,11 +249,10 @@ def apply_edges_style(
   tree: pgv.AGraph,
   config: TreeConfiguration
 ) -> None:
-  # Global edge style
-  for key, value in config.edge_config.__dict__.items():
-    tree.edge_attr[key] = value
+  for edge in tree.edges():
+    if edge.attr['style'] == "invis": continue
 
-  # Specific edge style
-  for edge_config in config.edge_config.edges:
+    edge_config = config.edge_config.edges.get((edge[0], edge[1]), config.edge_config)
+
     for key, value in edge_config.__dict__.items():
-      tree.get_edge(edge_config.start_node, edge_config.end_node).attr[key] = value
+      edge.attr[key] = value
