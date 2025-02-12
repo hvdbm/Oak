@@ -79,6 +79,15 @@ class Family():
       if children not in self.members.keys(): continue
       n += self.find_n_descendants(self.members[children])+1
     return n
+  
+  def is_only_child(self, id: str) -> bool:
+    if id not in self.members.keys(): return False
+
+    for parent in self.members[id].parents:
+      if parent not in self.members.keys(): continue
+      if len(self.members[parent].childrens) == 1: return True
+
+    return False
 
   def to_df(self) -> pd.DataFrame:
     """

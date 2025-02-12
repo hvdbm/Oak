@@ -68,25 +68,9 @@ class IntermediateGeneration():
     n_member = len(self.members)
     return self.members[:n_member//2] + [self.id] + self.members[n_member//2:]
 
-def is_only_child(parents: list[str], family: dict[Person]) -> bool:
-  """
-  Check if the person is the only child of the union of his parents.
-
-  Parameters:
-    parents (list[str]): the list of parents of the person.
-    family (dict[Person]): all the family members.
-  
-  Returns:
-    bool: True if the person is the only child of the union of his parents, False otherwise.
-  """
-  for parent in parents:
-    if len(family[parent].childrens) == 1: return True
-  
-  return False
-
 def add_parents_to_tree(
   person: Person,
-  family: dict[Person],
+  family: Family,
   generations: dict[Generation],
   current_generation: int,
   already_seen: set[str],
@@ -99,7 +83,7 @@ def add_parents_to_tree(
 
   Parameters:
     person (Person): the person to add the parents from.
-    family (dict[Person]): all the family members.
+    family (Family): the family object with all the relatives of the person.
     generations (dict[Generation]): all the generations of the family.
     current_generation (int): the current generation.
     already_seen (set[str]): the set of already seen persons.
@@ -121,7 +105,7 @@ def add_parents_to_tree(
     childrens_subgraphs[parents_union_name_childrens] = IntermediateGeneration(parents_union_name_childrens, current_generation-1)
 
   # Add middle childrens nodes and edges
-  if is_only_child(person.parents, family):
+  if family.is_only_child(person.id):
     # Special case : the person is the only child, no need to add intermediate nodes
     parents_union_name_w_child = parents_union_name_childrens
     tree.add_edge(parents_union_name_w_child, person.id)
@@ -137,11 +121,11 @@ def add_parents_to_tree(
 
   # Add parents to the previous generation
   for parent in person.parents:
-    generate_generations(family[parent], family, generations, current_generation-1, already_seen, tree, childrens_subgraphs)
+    generate_generations(family.members[parent], family, generations, current_generation-1, already_seen, tree, childrens_subgraphs)
 
 def generate_generations(
   person: Person,
-  family: dict[Person],
+  family: Family,
   generations: dict[Generation],
   current_generation: int,
   already_seen: set[str],
@@ -176,14 +160,14 @@ def generate_generations(
         tree.add_edge(union_name, f"{get_union_name([person.id, spouse])}/childrens")
 
       # Add spouse's parents to the previous generation
-      add_parents_to_tree(family[spouse], family, generations, current_generation, already_seen, tree, childrens_subgraphs)
+      add_parents_to_tree(family.members[spouse], family, generations, current_generation, already_seen, tree, childrens_subgraphs)
 
     # Special case : if a person have childrens but no spouse
     if len(person.spouses) == 0 and len(person.childrens) != 0:
       tree.add_edge(person.id, f"{get_union_name([person.id])}/childrens")
 
     for children in person.childrens:
-      generate_generations(family[children], family, generations, current_generation+1, already_seen, tree, childrens_subgraphs)
+      generate_generations(family.members[children], family, generations, current_generation+1, already_seen, tree, childrens_subgraphs)
 
 def draw_tree(
   family: Family,
@@ -205,9 +189,6 @@ def draw_tree(
     fontname=config.title_config.font,
     fontsize=config.title_config.font_size
   )
-  
-  G.edge_attr['color'] = config.edge_config.color
-  G.edge_attr['penwidth'] = config.edge_config.penwidth
 
   G.node_attr['shape'] = config.node_config.shape
 
@@ -234,7 +215,7 @@ def draw_tree(
       height=config.node_config.height_w_img if person.image != "" else ""
     )
     generate_generations(
-      person, family.members, generations, current_generation, already_seen_members, G, childrens_subgraphs
+      person, family, generations, current_generation, already_seen_members, G, childrens_subgraphs
     )
 
   # Add edges and ranks of persons of the same generation
@@ -259,5 +240,20 @@ def draw_tree(
       if (n_order[n], n_order[n+1]) in G.edges(): continue
       G.add_edge(n_order[n], n_order[n+1])
 
+  apply_edges_style(G, config)
+
   G.layout(prog='dot')
   G.draw(output_file_path)
+
+def apply_edges_style(
+  tree: pgv.AGraph,
+  config: TreeConfiguration
+) -> None:
+  # Global edge style
+  for key, value in config.edge_config.__dict__.items():
+    tree.edge_attr[key] = value
+
+  # Specific edge style
+  for edge_config in config.edge_config.edges:
+    for key, value in edge_config.__dict__.items():
+      tree.get_edge(edge_config.start_node, edge_config.end_node).attr[key] = value
