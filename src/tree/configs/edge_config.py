@@ -26,8 +26,10 @@ class EdgeConfig(EdgeStyle):
   ):
     super().__init__(**kwargs)
 
-    self.edges = []
+    self.edges = {}
 
     for edge in edges:
       edge_style = {**kwargs, **edge}
-      self.edges.append(EdgeStyle(**edge_style))
+      key = (edge.get("start_node"), edge.get("end_node"))
+      self.edges[key] = EdgeStyle(**edge_style)
+
