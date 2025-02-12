@@ -32,3 +32,4 @@ class EdgeConfig(EdgeStyle):
       edge_style = {**kwargs, **edge}
       key = (edge.get("start_node"), edge.get("end_node"))
       self.edges[key] = EdgeStyle(**edge_style)
+
