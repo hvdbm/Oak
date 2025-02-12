@@ -12,7 +12,7 @@ class TitleConfig(FontConfig):
     self.location = location
     self.title = title
 
-    FontConfig.__init__(self, **kwargs)
+    super().__init__(self, **kwargs)
   
   def get_label(self, label: str | None = None) -> str:
     if not self.enabled: return ""

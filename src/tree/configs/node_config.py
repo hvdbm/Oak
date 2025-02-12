@@ -21,6 +21,6 @@ class NodeConfig(FontConfig):
     self.shape = shape
     self.style = style
 
-    FontConfig.__init__(self, **kwargs)
+    super().__init__(self, **kwargs)
   
     
