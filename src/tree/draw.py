@@ -184,10 +184,10 @@ def draw_tree(
     splines="ortho",
     bgcolor=config.background_color,
     label=config.title_config.get_label(family.name),
-    fontcolor=config.title_config.font_color,
     labelloc=config.title_config.location,
-    fontname=config.title_config.font,
-    fontsize=config.title_config.font_size
+    fontcolor=config.title_config.fontcolor,
+    fontname=config.title_config.fontname,
+    fontsize=config.title_config.fontsize
   )
 
   already_seen_members = set()

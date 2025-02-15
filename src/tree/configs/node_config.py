@@ -1,6 +1,6 @@
 from src.tree.configs.font_config import FontConfig
 
-class NodeStyle():
+class NodeStyle(FontConfig):
   def __init__(self,
     id: str = "",
     color: str = "black",
@@ -20,8 +20,7 @@ class NodeStyle():
     self.shape = shape
     self.style = style
 
-    for key, value in kwargs.items():
-      print(f"NodeStyle : unknown key: {key}, value: {value}")
+    super().__init__(**kwargs)
 
 class NodeConfig(NodeStyle):
   def __init__(self,
