@@ -180,7 +180,7 @@ def draw_tree(
   persons.reverse()
 
   # Init graph
-  G = pgv.AGraph(
+  tree = pgv.AGraph(
     splines="ortho",
     bgcolor=config.background_color,
     label=config.title_config.get_label(family.name),
@@ -190,8 +190,6 @@ def draw_tree(
     fontsize=config.title_config.font_size
   )
 
-  G.node_attr['shape'] = config.node_config.shape
-
   already_seen_members = set()
   generations = {}
   childrens_subgraphs = {}
@@ -200,26 +198,14 @@ def draw_tree(
 
   # Add persons
   for person in persons:
-    G.add_node(
-      person.id,
-      style=config.node_config.style,
-      fillcolor=get_node_color(person, config.node_config),
-      label=config.person_label_config.get_label(person),
-      labelloc=config.node_config.labelloc if person.image != "" else "",
-      group=person.id,
-      fontname=config.node_config.font,
-      fontsize=config.node_config.font_size,
-      fontcolor=config.node_config.font_color,
-      image=person.image,
-      imagepos=config.node_config.imagepos if person.image != "" else "",
-      height=config.node_config.height_w_img if person.image != "" else ""
-    )
+    tree.add_node(person.id, label=config.person_label_config.get_label(person), image=person.image, group=person.id)
+  
     generate_generations(
-      person, family, generations, current_generation, already_seen_members, G, childrens_subgraphs
+      person, family, generations, current_generation, already_seen_members, tree, childrens_subgraphs
     )
 
   # Add edges and ranks of persons of the same generation
-  for gen in generations.values(): gen.add_subgraph_to_tree(G)
+  for gen in generations.values(): gen.add_subgraph_to_tree(tree)
 
   # Add intermediate nodes and edges between generations
   for n in range(len(generations)):
@@ -230,20 +216,33 @@ def draw_tree(
       v_order = v.get_order()
       
       if n_order != []:
-        G.add_edge(n_order[-1], v_order[0], style="invis")
+        tree.add_edge(n_order[-1], v_order[0], style="invis")
 
       n_order += v_order
 
-    G.add_subgraph(n_order, rank="same")
+    tree.add_subgraph(n_order, rank="same")
     for n in range(len(n_order)):
       if n+1 >= len(n_order): continue
-      if (n_order[n], n_order[n+1]) in G.edges(): continue
-      G.add_edge(n_order[n], n_order[n+1])
+      if (n_order[n], n_order[n+1]) in tree.edges(): continue
+      tree.add_edge(n_order[n], n_order[n+1])
 
-  apply_edges_style(G, config)
+  apply_edges_style(tree, config)
+  apply_node_style(tree, config)
 
-  G.layout(prog='dot')
-  G.draw(output_file_path)
+  tree.layout(prog='dot')
+  tree.draw(output_file_path)
+
+def apply_node_style(
+  tree: pgv.AGraph,
+  config: TreeConfiguration
+) -> None:
+  for node in tree.nodes():
+    if node.attr['shape'] == "point": continue
+
+    node_config = config.node_config.nodes.get(node, config.node_config)
+
+    for key, value in node_config.__dict__.items():
+      node.attr[key] = value
 
 def apply_edges_style(
   tree: pgv.AGraph,
