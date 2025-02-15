@@ -16,25 +16,6 @@ def get_union_name(parents: list[str]) -> str:
   """
   return " & ".join(sorted(parents))
 
-def get_node_color(person: Person, node_config: NodeConfig) -> str:
-  """
-  Get the color of a node based on the node configuration. If no color_by is specified or used, the default color is returned.
-
-  Parameters:
-    person (Person): the person to get the color from.
-    node_config (NodeConfig): the node configuration.
-
-  Returns:
-    str: the color of the node.
-  """
-  if node_config.color_by is None : return node_config.default_color
-  
-  if node_config.color_by in person.__dict__.keys():
-    value = person.__dict__.get(node_config.color_by)
-    return node_config.color_by_dict.get(value, node_config.default_color)
-  
-  return node_config.default_color
-
 class Generation():
   def __init__(self, gen_id: int):
     self.id = gen_id
@@ -227,22 +208,44 @@ def draw_tree(
       tree.add_edge(n_order[n], n_order[n+1])
 
   apply_edges_style(tree, config)
-  apply_node_style(tree, config)
+  apply_node_style(tree, config, family)
 
   tree.layout(prog='dot')
   tree.draw(output_file_path)
 
+def apply_dict(
+  obj: dict,
+  dict: dict
+) -> None:
+  for key, value in dict.items():
+    obj[key] = value
+
 def apply_node_style(
   tree: pgv.AGraph,
-  config: TreeConfiguration
+  config: TreeConfiguration,
+  family: Family
 ) -> None:
   for node in tree.nodes():
     if node.attr['shape'] == "point": continue
 
-    node_config = config.node_config.nodes.get(node, config.node_config)
+    # Get the default node style dict
+    apply_dict(node.attr, config.node_config.__dict__)
 
-    for key, value in node_config.__dict__.items():
-      node.attr[key] = value
+    person = family.members[node]
+    # Apply conditional node style on the the previous dict
+    for conditional_node in config.node_config.conditional_nodes:
+      if conditional_node.key not in person.__dict__.keys(): continue
+
+      if conditional_node.operator == "==":
+        if person.__dict__[conditional_node.key] == conditional_node.value:
+          apply_dict(node.attr, conditional_node.style_args)
+      elif conditional_node.operator == "!=":
+        if person.__dict__[conditional_node.key] != conditional_node.value:
+          apply_dict(node.attr, conditional_node.style_args)
+
+    # Apply node style by id on the previous dict
+    if node in config.node_config.nodes.keys():
+      apply_dict(node.attr, config.node_config.nodes[node].__dict__)
 
 def apply_edges_style(
   tree: pgv.AGraph,
@@ -252,6 +255,4 @@ def apply_edges_style(
     if edge.attr['style'] == "invis": continue
 
     edge_config = config.edge_config.edges.get((edge[0], edge[1]), config.edge_config)
-
-    for key, value in edge_config.__dict__.items():
-      edge.attr[key] = value
+    apply_dict(edge.attr, edge_config.__dict__)
