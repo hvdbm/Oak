@@ -54,7 +54,7 @@ class PersonLabelConfig():
 
     flags = [pycountry.countries.get(alpha_2=n).flag for n in person.nationalities]
     
-    return f"{newline()}{"  ".join(flags)}"
+    return f"{newline()}{" ".join(flags)}"
   
   def get_label(self, person: Person) -> str:
     """
@@ -68,8 +68,8 @@ class PersonLabelConfig():
     """
     names = self.get_names_label(person)
 
-    nickname = f'"{person.nickname}" {newline()}' if self.show_nickname and person.nickname != None else ""
-    death_year = f"- {person.death_year}" if person.death_year != None else ""
+    nickname = f'"{person.nickname}"{newline()}' if self.show_nickname and person.nickname != None else ""
+    death_year = f" - {person.death_year}" if person.death_year != None else ""
     nationalities = self.get_nationalities_label(person)
 
-    return f"<{names} {newline()} {nickname} {person.birth_year} {death_year} {nationalities}>"
+    return f"<{names}{newline()}{nickname}{person.birth_year}{death_year}{nationalities}>"
