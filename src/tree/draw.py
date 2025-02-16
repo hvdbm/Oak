@@ -79,7 +79,7 @@ def add_parents_to_tree(
   # Add parents intermediate node
   union_name = get_union_name(person.parents)
   parents_union_name_childrens = f"{union_name}/childrens"
-  tree.add_node(parents_union_name_childrens, shape="point", group=union_name)
+  tree.add_node(parents_union_name_childrens,  group=union_name, shape="point", style="invis", height=0, width=0)
 
   # Prepare subgraph with all the middle childrens nodes align at the same rank
   if parents_union_name_childrens not in childrens_subgraphs.keys():
@@ -96,7 +96,7 @@ def add_parents_to_tree(
     if f"{union_name}/union" in tree.nodes(): tree.get_node(f"{union_name}/union").attr['group'] = person.id
   else:
     parents_union_name_w_child = f"{parents_union_name_childrens}/{person.id}"
-    tree.add_node(parents_union_name_w_child, shape="point", group=person.id)
+    tree.add_node(parents_union_name_w_child, group=person.id, shape="point", style="invis", height=0, width=0)
     tree.add_edge(parents_union_name_w_child, person.id)
     childrens_subgraphs[parents_union_name_childrens].add_member(parents_union_name_w_child)
 
@@ -125,7 +125,7 @@ def generate_generations(
     for spouse in person.spouses:
       # Add intermediate node between spouses
       union_name = f"{get_union_name([person.id, spouse])}/union"
-      tree.add_node(union_name, shape="point", group=get_union_name([person.id, spouse]))
+      tree.add_node(union_name, group=get_union_name([person.id, spouse]), shape="point", style="invis", height=0, width=0)
         
       # Add intermediate node in generation
       generations[current_generation].add_member(union_name)

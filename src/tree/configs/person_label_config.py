@@ -8,12 +8,14 @@ class PersonLabelConfig():
     bold_names: bool = True,
     show_nationalities: bool = True,
     show_nickname: bool = True,
+    show_years: bool = True,
     split_names: bool = False,
     upper_last_name: bool = False
   ):
     self.bold_names = bold_names
     self.show_nationalities = show_nationalities
     self.show_nickname = show_nickname
+    self.show_years = show_years
     self.split_names = split_names
     self.upper_last_name = upper_last_name
 
@@ -50,12 +52,18 @@ class PersonLabelConfig():
     Returns:
       str: the nationalities of a person.
     """
-    if person.nationalities == []: return ""
+    if not self.show_nationalities or person.nationalities == []: return ""
 
     flags = [pycountry.countries.get(alpha_2=n).flag for n in person.nationalities]
     
     return f"{newline()}{" ".join(flags)}"
   
+  def get_years_label(self, person: Person) -> str:
+    if not self.show_years: return ""
+
+    death_year = f" - {person.death_year}" if person.death_year != None else ""
+    return f"{newline()}{person.birth_year}{death_year}"
+
   def get_label(self, person: Person) -> str:
     """
     Get the label (names, nickname, birth/death years and nationalities) of a person.
@@ -68,8 +76,8 @@ class PersonLabelConfig():
     """
     names = self.get_names_label(person)
 
-    nickname = f'"{person.nickname}"{newline()}' if self.show_nickname and person.nickname != None else ""
-    death_year = f" - {person.death_year}" if person.death_year != None else ""
+    nickname = f'{newline()}"{person.nickname}"' if self.show_nickname and person.nickname != None else ""
+    years = self.get_years_label(person)
     nationalities = self.get_nationalities_label(person)
 
-    return f"<{names}{newline()}{nickname}{person.birth_year}{death_year}{nationalities}>"
+    return f"<{names}{nickname}{years}{nationalities}>"

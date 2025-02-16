@@ -5,6 +5,7 @@ class NodeStyle(FontConfig):
     id: str = "",
     color: str = "black",
     fillcolor: str = "white",
+    height: str = "",
     imagepos: str = "tc",
     labelloc: str = "",
     shape: str = "box",
@@ -15,6 +16,7 @@ class NodeStyle(FontConfig):
 
     self.color = color
     self.fillcolor = fillcolor
+    self.height = height
     self.imagepos = imagepos
     self.labelloc = labelloc
     self.shape = shape
