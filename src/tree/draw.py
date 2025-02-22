@@ -16,25 +16,6 @@ def get_union_name(parents: list[str]) -> str:
   """
   return " & ".join(sorted(parents))
 
-def get_node_color(person: Person, node_config: NodeConfig) -> str:
-  """
-  Get the color of a node based on the node configuration. If no color_by is specified or used, the default color is returned.
-
-  Parameters:
-    person (Person): the person to get the color from.
-    node_config (NodeConfig): the node configuration.
-
-  Returns:
-    str: the color of the node.
-  """
-  if node_config.color_by is None : return node_config.default_color
-  
-  if node_config.color_by in person.__dict__.keys():
-    value = person.__dict__.get(node_config.color_by)
-    return node_config.color_by_dict.get(value, node_config.default_color)
-  
-  return node_config.default_color
-
 class Generation():
   def __init__(self, gen_id: int):
     self.id = gen_id
@@ -98,7 +79,7 @@ def add_parents_to_tree(
   # Add parents intermediate node
   union_name = get_union_name(person.parents)
   parents_union_name_childrens = f"{union_name}/childrens"
-  tree.add_node(parents_union_name_childrens, shape="point", group=union_name)
+  tree.add_node(parents_union_name_childrens,  group=union_name, shape="point", style="invis", height=0, width=0)
 
   # Prepare subgraph with all the middle childrens nodes align at the same rank
   if parents_union_name_childrens not in childrens_subgraphs.keys():
@@ -115,7 +96,7 @@ def add_parents_to_tree(
     if f"{union_name}/union" in tree.nodes(): tree.get_node(f"{union_name}/union").attr['group'] = person.id
   else:
     parents_union_name_w_child = f"{parents_union_name_childrens}/{person.id}"
-    tree.add_node(parents_union_name_w_child, shape="point", group=person.id)
+    tree.add_node(parents_union_name_w_child, group=person.id, shape="point", style="invis", height=0, width=0)
     tree.add_edge(parents_union_name_w_child, person.id)
     childrens_subgraphs[parents_union_name_childrens].add_member(parents_union_name_w_child)
 
@@ -144,7 +125,7 @@ def generate_generations(
     for spouse in person.spouses:
       # Add intermediate node between spouses
       union_name = f"{get_union_name([person.id, spouse])}/union"
-      tree.add_node(union_name, shape="point", group=get_union_name([person.id, spouse]))
+      tree.add_node(union_name, group=get_union_name([person.id, spouse]), shape="point", style="invis", height=0, width=0)
         
       # Add intermediate node in generation
       generations[current_generation].add_member(union_name)
@@ -180,17 +161,15 @@ def draw_tree(
   persons.reverse()
 
   # Init graph
-  G = pgv.AGraph(
+  tree = pgv.AGraph(
     splines="ortho",
     bgcolor=config.background_color,
     label=config.title_config.get_label(family.name),
-    fontcolor=config.title_config.font_color,
     labelloc=config.title_config.location,
-    fontname=config.title_config.font,
-    fontsize=config.title_config.font_size
+    fontcolor=config.title_config.fontcolor,
+    fontname=config.title_config.fontname,
+    fontsize=config.title_config.fontsize
   )
-
-  G.node_attr['shape'] = config.node_config.shape
 
   already_seen_members = set()
   generations = {}
@@ -200,26 +179,14 @@ def draw_tree(
 
   # Add persons
   for person in persons:
-    G.add_node(
-      person.id,
-      style=config.node_config.style,
-      fillcolor=get_node_color(person, config.node_config),
-      label=config.person_label_config.get_label(person),
-      labelloc=config.node_config.labelloc if person.image != "" else "",
-      group=person.id,
-      fontname=config.node_config.font,
-      fontsize=config.node_config.font_size,
-      fontcolor=config.node_config.font_color,
-      image=person.image,
-      imagepos=config.node_config.imagepos if person.image != "" else "",
-      height=config.node_config.height_w_img if person.image != "" else ""
-    )
+    tree.add_node(person.id, label=config.person_label_config.get_label(person), image=person.image, group=person.id)
+  
     generate_generations(
-      person, family, generations, current_generation, already_seen_members, G, childrens_subgraphs
+      person, family, generations, current_generation, already_seen_members, tree, childrens_subgraphs
     )
 
   # Add edges and ranks of persons of the same generation
-  for gen in generations.values(): gen.add_subgraph_to_tree(G)
+  for gen in generations.values(): gen.add_subgraph_to_tree(tree)
 
   # Add intermediate nodes and edges between generations
   for n in range(len(generations)):
@@ -230,29 +197,64 @@ def draw_tree(
       v_order = v.get_order()
       
       if n_order != []:
-        G.add_edge(n_order[-1], v_order[0], style="invis")
+        tree.add_edge(n_order[-1], v_order[0], style="invis")
 
       n_order += v_order
 
-    G.add_subgraph(n_order, rank="same")
+    tree.add_subgraph(n_order, rank="same")
     for n in range(len(n_order)):
       if n+1 >= len(n_order): continue
-      if (n_order[n], n_order[n+1]) in G.edges(): continue
-      G.add_edge(n_order[n], n_order[n+1])
+      if (n_order[n], n_order[n+1]) in tree.edges(): continue
+      tree.add_edge(n_order[n], n_order[n+1])
 
-  apply_edges_style(G, config)
+  apply_edges_style(tree, config)
+  apply_node_style(tree, config, family)
 
-  G.layout(prog='dot')
-  G.draw(output_file_path)
+  tree.layout(prog='dot')
+  tree.draw(output_file_path)
+
+def apply_dict(
+  obj: dict,
+  dict: dict
+) -> None:
+  for key, value in dict.items():
+    obj[key] = value
+
+def apply_node_style(
+  tree: pgv.AGraph,
+  config: TreeConfiguration,
+  family: Family
+) -> None:
+  for node in tree.nodes():
+    if node.attr['shape'] == "point" and node not in config.node_config.nodes.keys(): continue
+
+    # Get the default node style dict
+    apply_dict(node.attr, config.node_config.__dict__)
+
+    person = family.members[node]
+    # Apply conditional node style on the the previous dict
+    for conditional_node in config.node_config.conditional_nodes:
+      if conditional_node.key not in person.__dict__.keys(): continue
+
+      if conditional_node.operator == "==":
+        if person.__dict__[conditional_node.key] == conditional_node.value:
+          apply_dict(node.attr, conditional_node.style_args)
+      elif conditional_node.operator == "!=":
+        if person.__dict__[conditional_node.key] != conditional_node.value:
+          apply_dict(node.attr, conditional_node.style_args)
+
+    # Apply node style by id on the previous dict
+    if node in config.node_config.nodes.keys():
+      apply_dict(node.attr, config.node_config.nodes[node].__dict__)
 
 def apply_edges_style(
   tree: pgv.AGraph,
   config: TreeConfiguration
 ) -> None:
+  edges_config = config.edge_config
   for edge in tree.edges():
-    if edge.attr['style'] == "invis": continue
+    edge_id = (edge[0], edge[1])
+    if edge.attr['style'] == "invis" and edge_id not in edges_config.edges.keys(): continue
 
-    edge_config = config.edge_config.edges.get((edge[0], edge[1]), config.edge_config)
-
-    for key, value in edge_config.__dict__.items():
-      edge.attr[key] = value
+    edge_config = edges_config.edges.get(edge_id, edges_config)
+    apply_dict(edge.attr, edge_config.__dict__)
