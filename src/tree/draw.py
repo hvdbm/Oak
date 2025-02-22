@@ -226,7 +226,7 @@ def apply_node_style(
   family: Family
 ) -> None:
   for node in tree.nodes():
-    if node.attr['shape'] == "point": continue
+    if node.attr['shape'] == "point" and node not in config.node_config.nodes.keys(): continue
 
     # Get the default node style dict
     apply_dict(node.attr, config.node_config.__dict__)
@@ -251,8 +251,10 @@ def apply_edges_style(
   tree: pgv.AGraph,
   config: TreeConfiguration
 ) -> None:
+  edges_config = config.edge_config
   for edge in tree.edges():
-    if edge.attr['style'] == "invis": continue
+    edge_id = (edge[0], edge[1])
+    if edge.attr['style'] == "invis" and edge_id not in edges_config.edges.keys(): continue
 
-    edge_config = config.edge_config.edges.get((edge[0], edge[1]), config.edge_config)
+    edge_config = edges_config.edges.get(edge_id, edges_config)
     apply_dict(edge.attr, edge_config.__dict__)
