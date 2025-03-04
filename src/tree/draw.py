@@ -82,7 +82,7 @@ def add_parents_to_tree(
   tree.add_node(parents_union_name_childrens,  group=union_name, shape="point", style="invis", height=0, width=0)
 
   # Prepare subgraph with all the middle childrens nodes align at the same rank
-  if parents_union_name_childrens not in childrens_subgraphs.keys():
+  if parents_union_name_childrens not in childrens_subgraphs:
     childrens_subgraphs[parents_union_name_childrens] = IntermediateGeneration(parents_union_name_childrens, current_generation-1)
 
   # Add middle childrens nodes and edges
@@ -113,7 +113,7 @@ def generate_generations(
   tree: pgv.AGraph,
   childrens_subgraphs: dict[IntermediateGeneration]
 ) -> None:
-  if current_generation not in generations.keys(): generations[current_generation] = Generation(current_generation)
+  if current_generation not in generations: generations[current_generation] = Generation(current_generation)
   
   if person.id not in already_seen:
     generations[current_generation].add_member(person.id)
@@ -155,6 +155,10 @@ def draw_tree(
   config: TreeConfiguration,
   output_file_path: str,
 ) -> None:
+  # Remove ignored persons
+  for person_id in config.ignore:
+    family.remove_person(person_id)
+
   # Order persons of the family by n_descendants descending order
   persons = list(family.members.values())
   persons.sort(key=lambda x : x.n_descendants)
@@ -226,7 +230,7 @@ def apply_node_style(
   family: Family
 ) -> None:
   for node in tree.nodes():
-    if node.attr['shape'] == "point" and node not in config.node_config.nodes.keys(): continue
+    if node.attr['shape'] == "point" and node not in config.node_config.nodes: continue
 
     # Get the default node style dict
     apply_dict(node.attr, config.node_config.__dict__)
@@ -234,7 +238,7 @@ def apply_node_style(
     person = family.members[node]
     # Apply conditional node style on the the previous dict
     for conditional_node in config.node_config.conditional_nodes:
-      if conditional_node.key not in person.__dict__.keys(): continue
+      if conditional_node.key not in person.__dict__: continue
 
       if conditional_node.operator == "==":
         if person.__dict__[conditional_node.key] == conditional_node.value:
@@ -244,7 +248,7 @@ def apply_node_style(
           apply_dict(node.attr, conditional_node.style_args)
 
     # Apply node style by id on the previous dict
-    if node in config.node_config.nodes.keys():
+    if node in config.node_config.nodes:
       apply_dict(node.attr, config.node_config.nodes[node].__dict__)
 
 def apply_edges_style(
@@ -254,7 +258,7 @@ def apply_edges_style(
   edges_config = config.edge_config
   for edge in tree.edges():
     edge_id = (edge[0], edge[1])
-    if edge.attr['style'] == "invis" and edge_id not in edges_config.edges.keys(): continue
+    if edge.attr['style'] == "invis" and edge_id not in edges_config.edges: continue
 
     edge_config = edges_config.edges.get(edge_id, edges_config)
     apply_dict(edge.attr, edge_config.__dict__)
