@@ -81,6 +81,15 @@ class Family():
     return n
   
   def is_only_child(self, id: str) -> bool:
+    """
+    Check if a person is an only child. Doesn't count half-siblings.
+
+    Parameters:
+      id (str): The id of the person to check.
+
+    Returns:
+      bool: If the person is an only child.
+    """
     if id not in self.members: return False
 
     for parent in self.members[id].parents:
@@ -115,5 +124,8 @@ class Family():
   def to_df(self) -> pd.DataFrame:
     """
     Convert the list of members of the family as a Pandas dataframe with the properties of a Person as columns.
+    
+    Returns:
+      pd.DataFrame: the list of members as a dataframe.
     """
     return pd.DataFrame([vars(x) for x in self.members.values()])

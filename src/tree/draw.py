@@ -238,7 +238,7 @@ def apply_node_style(
     person = family.members[node]
     # Apply conditional node style on the the previous dict
     for conditional_node in config.node_config.conditional_nodes:
-      if conditional_node.key not in person.__dict__.keys(): continue
+      if conditional_node.key not in person.__dict__: continue
 
       if conditional_node.operator == "==":
         if person.__dict__[conditional_node.key] == conditional_node.value:
@@ -248,7 +248,7 @@ def apply_node_style(
           apply_dict(node.attr, conditional_node.style_args)
 
     # Apply node style by id on the previous dict
-    if node in config.node_config.nodes.keys():
+    if node in config.node_config.nodes:
       apply_dict(node.attr, config.node_config.nodes[node].__dict__)
 
 def apply_edges_style(
