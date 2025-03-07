@@ -114,9 +114,12 @@ class Family():
     for person in self.members.values():
       person.n_descendants = None
 
-      if id in person.parents: person.parents.remove(id)
-      if id in person.spouses: person.spouses.remove(id)
-      if id in person.childrens: person.childrens.remove(id)
+      if id in person.parents: 
+        person.parents = [i for i in person.parents if i != id]
+      if id in person.spouses:
+        person.spouses = [i for i in person.spouses if i != id]
+      if id in person.childrens:
+        person.childrens = [i for i in person.childrens if i != id]
     
     for person in self.members.values():
       person.n_descendants = self.find_n_descendants(person)
