@@ -1,4 +1,5 @@
 matplotlib
+mypy
 pandas
 pycountry
 pygraphviz

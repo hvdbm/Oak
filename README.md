@@ -4,7 +4,9 @@ Group of tools to work with genealogical data.
 
 ## Installation
 
-Install dependencies with `pip install -r requirements.txt`.
+Install the Python dependencies with : `pip install -r requirements.txt`.
+
+The `pygraphviz` dependency needs an installation of [Graphviz](https://graphviz.org). See the installation instructions [here](https://pygraphviz.github.io/documentation/stable/install.html).
 
 ## Data
 
@@ -27,7 +29,7 @@ options:
 
 ### oak_tree
 
-Visualize a family tree based on the [Graphviz](https://graphviz.org) software :
+Visualize a family tree based on the Graphviz software :
 
 ```
 usage: oak_tree.py [-h] --input_path INPUT_PATH [--config_file_path CONFIG_FILE_PATH] [--output_dir OUTPUT_DIR]

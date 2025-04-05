@@ -61,7 +61,7 @@ def check_events(family: Family) -> None:
   print(f"📅 Oldest event             : {events[0]}")
   print(f"📅 Most recent event        : {events[-1]}")
 
-def check_nationalities(family: Family) -> int:
+def check_nationalities(family: Family) -> None:
   """
   Check the number of nationalities in the family data and print them.
 
@@ -71,7 +71,7 @@ def check_nationalities(family: Family) -> int:
   Returns:
     None
   """
-  nationalities_count = {}
+  nationalities_count: dict[str, int] = {}
 
   for person in family.members.values():
     for nationality in person.nationalities:
