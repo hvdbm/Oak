@@ -20,5 +20,6 @@ class TitleConfig(FontConfig):
 
     # Override the label if a title is provided
     text = self.title if self.title is not None else label
+    if text is None: return ""
 
     return f"<{bold(text)} {newline()} >"

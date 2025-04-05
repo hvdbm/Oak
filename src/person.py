@@ -32,4 +32,4 @@ class Person():
     self.childrens = childrens
 
     # Calculated properties
-    self.n_descendants = None
+    self.n_descendants: int | None = None

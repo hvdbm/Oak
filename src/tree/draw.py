@@ -1,6 +1,6 @@
 import pygraphviz as pgv
 
-from src.tree.configuration import TreeConfiguration, NodeConfig
+from src.tree.configuration import TreeConfiguration
 from src.person import Person
 from src.family import Family
 
@@ -19,7 +19,7 @@ def get_union_name(parents: list[str]) -> str:
 class Generation():
   def __init__(self, gen_id: int):
     self.id = gen_id
-    self.members = []
+    self.members: list[str] = []
   
   def add_member(self, person_id: str):
     self.members.append(person_id)
@@ -40,7 +40,7 @@ class IntermediateGeneration():
   def __init__(self, group_id: str, gen_id: int):
     self.id = group_id
     self.gen_id = gen_id
-    self.members = []
+    self.members: list[str] = []
   
   def add_member(self, person_id: str):
     self.members.append(person_id)
@@ -52,11 +52,11 @@ class IntermediateGeneration():
 def add_parents_to_tree(
   person: Person,
   family: Family,
-  generations: dict[Generation],
+  generations: dict[int, Generation],
   current_generation: int,
   already_seen: set[str],
   tree: pgv.AGraph,
-  childrens_subgraphs: dict[IntermediateGeneration]
+  childrens_subgraphs: dict[str, IntermediateGeneration]
 ) -> None:
   """
   Add the parents of a person to the tree. The nodes of the parents are added to the previous generation and 
@@ -65,11 +65,11 @@ def add_parents_to_tree(
   Parameters:
     person (Person): the person to add the parents from.
     family (Family): the family object with all the relatives of the person.
-    generations (dict[Generation]): all the generations of the family.
+    generations (dict[int, Generation]): all the generations of the family, where the key is the depth.
     current_generation (int): the current generation.
     already_seen (set[str]): the set of already seen persons.
     tree (pgv.AGraph): the graphviz tree to draw the parents nodes and edges to.
-    childrens_subgraphs (dict[IntermediateGeneration]): the intermediate nodes between the parents and the childrens of the parents.
+    childrens_subgraphs (dict[str, IntermediateGeneration]): the intermediate nodes between the parents and the childrens of the parents.
   
   Returns:
     None
@@ -113,11 +113,11 @@ def add_parents_to_tree(
 def generate_generations(
   person: Person,
   family: Family,
-  generations: dict[Generation],
+  generations: dict[int, Generation],
   current_generation: int,
   already_seen: set[str],
   tree: pgv.AGraph,
-  childrens_subgraphs: dict[IntermediateGeneration]
+  childrens_subgraphs: dict[str, IntermediateGeneration]
 ) -> None:
   if current_generation not in generations: generations[current_generation] = Generation(current_generation)
   
@@ -164,7 +164,7 @@ def draw_tree(
 
   # Order persons of the family by n_descendants descending order
   persons = list(family.members.values())
-  persons.sort(key=lambda x : x.n_descendants)
+  persons.sort(key=lambda x : x.n_descendants if x.n_descendants is not None else 0)
   persons.reverse()
 
   # Init graph
@@ -178,18 +178,29 @@ def draw_tree(
     fontsize=config.title_config.fontsize
   )
 
-  already_seen_members = set()
-  generations = {}
-  childrens_subgraphs = {}
+  already_seen_members: set[str] = set()
+  generations: dict[int, Generation] = {}
+  childrens_subgraphs: dict[str, IntermediateGeneration] = {}
 
   current_generation = 0
 
   # Add persons
   for person in persons:
-    tree.add_node(person.id, label=config.person_label_config.get_label(person), image=person.image, group=person.id)
+    tree.add_node(
+      person.id,
+      label=config.person_label_config.get_label(person),
+      image=person.image,
+      group=person.id
+    )
   
     generate_generations(
-      person, family, generations, current_generation, already_seen_members, tree, childrens_subgraphs
+      person,
+      family,
+      generations,
+      current_generation,
+      already_seen_members,
+      tree,
+      childrens_subgraphs
     )
 
   # Add edges and ranks of persons of the same generation
@@ -197,7 +208,7 @@ def draw_tree(
 
   # Add intermediate nodes and edges between generations
   for n in range(len(generations)):
-    n_order = []
+    n_order: list[str] = []
     
     for v in childrens_subgraphs.values():
       if n != v.gen_id: continue
