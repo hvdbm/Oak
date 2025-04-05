@@ -16,7 +16,7 @@ def main(input_path: str, config_file_path: str | None, output_dir: str) -> None
 if __name__ == "__main__":
   parser = ArgumentParser()
   parser.add_argument("--input_path", "-i", type=str, required=True, help="Path to the file containing the family data.")
-  parser.add_argument("--config_file_path", type=str, default=None, help="Path to the YAML file containing configuration of the family tree. This file is optionnal.")
+  parser.add_argument("--config_file_path", "-c", type=str, default=None, help="Path to the YAML file containing configuration of the family tree. This file is optionnal.")
   parser.add_argument("--output_dir", "-o", type=str, default=".", help="Path to the output directory. Take current folder as default.")
 
   args = parser.parse_args()

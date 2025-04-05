@@ -2,8 +2,8 @@ class Person():
   def __init__(self,
     first_name: str,
     last_name: str,
-    sex: str,
-    birth_year: str,
+    birth_year: str = "?",
+    sex: str = "?",
     parents: list[str] = [],
     spouses: list[str] = [],
     childrens: list[str] = [],
@@ -11,7 +11,8 @@ class Person():
     death_year: str | None = None,
     nickname: str | None = None,
     nationalities: list[str] = [],
-    image: str = ""
+    image: str = "",
+    suffix: str | None = None
   ):
     self.id = id if id != None else f"{first_name} {last_name} ({birth_year})"
 
@@ -23,6 +24,7 @@ class Person():
     self.nickname = nickname
     self.nationalities = nationalities
     self.image = image
+    self.suffix = suffix
 
     # Relationships
     self.parents = parents

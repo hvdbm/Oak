@@ -13,7 +13,7 @@ class TitleConfig(FontConfig):
     self.title = title
 
     FontConfig.__init__(self, **kwargs)
-  
+
   def get_label(self, label: str | None = None) -> str:
     if not self.enabled: return ""
     if self.title is None and label is None: return ""
