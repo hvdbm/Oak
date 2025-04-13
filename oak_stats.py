@@ -12,6 +12,9 @@ def main(input_path: str, output_dir: str) -> None:
   
   family = Family.from_path(input_path)
   family_df = family.to_df()
+  
+  family_df["number_spouses"] = family_df["spouses"].map(len)
+  family_df["number_childrens"] = family_df["childrens"].map(len)
 
   # Plot evolution
   plot_swarm(
@@ -20,6 +23,22 @@ def main(input_path: str, output_dir: str) -> None:
     "nationalities",
     f'Evolution of Nationalities \n of "{family.name}" in time',
     os.path.join(output_dir, "nationalities_evolution.png")
+  )
+
+  plot_swarm(
+    convert_column_to_int(family_df[family_df["number_spouses"] > 0], "birth_year"),
+    "birth_year",
+    "number_spouses",
+    f'Evolution of Number of Spouses \n of "{family.name}" in time',
+    os.path.join(output_dir, "spouses_evolution.png")
+  )
+
+  plot_swarm(
+    convert_column_to_int(family_df[family_df["number_childrens"] > 0], "birth_year"),
+    "birth_year",
+    "number_childrens",
+    f'Evolution of Number of Childrens \n of "{family.name}" in time',
+    os.path.join(output_dir, "childrens_evolution.png")
   )
 
   # Plot repartition
@@ -45,6 +64,19 @@ def main(input_path: str, output_dir: str) -> None:
     family_df["first_name"].value_counts(),
     f'First Name Repartition \n of "{family.name}"',
     os.path.join(output_dir, "first_name_repartition.png")
+  )
+
+  plot_bar(
+    family_df["number_spouses"].value_counts(),
+    f'Number of Spouses Repartition \n of "{family.name}"',
+    os.path.join(output_dir, "spouses_repartition.png")
+  )
+
+  plot_bar(
+    family_df[family_df["number_childrens"] > 0]["number_childrens"].value_counts(),
+    family_df["number_childrens"].value_counts(),
+    f'Number of Children Repartition \n of "{family.name}"',
+    os.path.join(output_dir, "children_repartition.png")
   )
 
 if __name__ == "__main__":
