@@ -73,7 +73,6 @@ def main(input_path: str, output_dir: str) -> None:
   )
 
   plot_bar(
-    family_df[family_df["number_childrens"] > 0]["number_childrens"].value_counts(),
     family_df["number_childrens"].value_counts(),
     f'Number of Children Repartition \n of "{family.name}"',
     os.path.join(output_dir, "children_repartition.png")
