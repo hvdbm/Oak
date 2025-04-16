@@ -1,7 +1,6 @@
-matplotlib
-mypy
-pandas
-pycountry
-pygraphviz
-pyyaml
-seaborn
+matplotlib==3.10.1
+pandas==2.2.3
+pycountry==24.6.1
+pygraphviz==1.14
+pyyaml==6.0.2
+seaborn==0.13.2

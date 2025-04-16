@@ -4,9 +4,24 @@ Group of tools to work with genealogical data.
 
 ## Installation
 
-Install the Python dependencies with : `pip install -r requirements.txt`.
+The project needs an installation of [Graphviz](https://graphviz.org) for the `pygraphviz` package (instructions available [here](https://pygraphviz.github.io/documentation/stable/install.html)).
 
-The `pygraphviz` dependency needs an installation of [Graphviz](https://graphviz.org). See the installation instructions [here](https://pygraphviz.github.io/documentation/stable/install.html).
+A [devcontainer](https://code.visualstudio.com/docs/devcontainers/create-dev-container) with a default environnement is also available. 
+
+### Python dependencies
+
+The Python dependencies for our different tools can be installed with : 
+
+```
+pip install -r requirements.txt
+```
+
+The Python dev dependencies to review the code can be installed with : 
+
+```
+pip install -r requirements_dev.txt
+```
+
 
 ## Data
 
