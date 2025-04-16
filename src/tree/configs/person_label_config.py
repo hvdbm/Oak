@@ -36,7 +36,7 @@ class PersonLabelConfig():
     last_name = person.last_name.upper() if self.upper_last_name else person.last_name
     names += f" {last_name}"
 
-    if person.suffix != None: names += f" {person.suffix}"
+    if person.suffix is not None: names += f" {person.suffix}"
 
     if self.bold_names: names = bold(names)
 
@@ -61,7 +61,7 @@ class PersonLabelConfig():
   def get_years_label(self, person: Person) -> str:
     if not self.show_years: return ""
 
-    death_year = f" - {person.death_year}" if person.death_year != None else ""
+    death_year = f" - {person.death_year}" if person.death_year is not None else ""
     return f"{newline()}{person.birth_year}{death_year}"
 
   def get_label(self, person: Person) -> str:
@@ -76,7 +76,7 @@ class PersonLabelConfig():
     """
     names = self.get_names_label(person)
 
-    nickname = f'{newline()}"{person.nickname}"' if self.show_nickname and person.nickname != None else ""
+    nickname = f'{newline()}"{person.nickname}"' if self.show_nickname and person.nickname is not None else ""
     years = self.get_years_label(person)
     nationalities = self.get_nationalities_label(person)
 

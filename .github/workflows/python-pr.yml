@@ -28,6 +28,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements_dev.txt
+    - name: Lint check with ruff
+      run: |
+        ruff check .
     - name: Type hint check with mypy
       run: |
         mypy .

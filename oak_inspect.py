@@ -19,7 +19,7 @@ def main(input_path: str) -> None:
   print()
 
   splitter()
-  print(f"Family informations :")
+  print("Family informations :")
   splitter()
   print(f"👥 Number of persons        : {len(family.members.keys())}")
   check_nationalities(family)
@@ -27,7 +27,7 @@ def main(input_path: str) -> None:
   print()
 
   splitter()
-  print(f"Validation :")
+  print("Validation :")
   splitter()
   check_warnings(family)
   print()

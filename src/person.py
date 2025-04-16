@@ -14,7 +14,7 @@ class Person():
     image: str = "",
     suffix: str | None = None
   ):
-    self.id = id if id != None else f"{first_name} {last_name} ({birth_year})"
+    self.id = id if id is not None else f"{first_name} {last_name} ({birth_year})"
 
     self.first_name = first_name
     self.last_name = last_name

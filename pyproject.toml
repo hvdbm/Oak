@@ -1,0 +1,8 @@
+[project]
+name = "oak"
+
+[tool.mypy]
+disable_error_code = ["import-untyped"]
+
+[tool.ruff]
+lint.ignore = ["E701"]
