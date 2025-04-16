@@ -5,4 +5,4 @@ name = "oak"
 ignore_missing_imports = true
 
 [tool.ruff]
-ignore = ["E701"]
+lint.ignore = ["E701"]

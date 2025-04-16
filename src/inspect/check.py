@@ -51,7 +51,7 @@ def check_events(family: Family) -> None:
   for person in family.members.values():
     try:
       events.append(int(person.birth_year))
-      if person.death_year != None: events.append(int(person.death_year))
+      if person.death_year is not None: events.append(int(person.death_year))
     except ValueError:
       continue
   
@@ -103,7 +103,7 @@ def check_warnings(family: Family) -> None:
     if len(person.parents) == 0 and len(person.spouses) == 0 and len(person.childrens) == 0:
       warnings.append(f'🚧  "{person.id}" has no relatives.')
 
-    if person.death_year != None:
+    if person.death_year is not None:
       try:
         if int(person.death_year) < int(person.birth_year):
           warnings.append(f'🚧  "{person.id}" has a death year before their birth year.')
