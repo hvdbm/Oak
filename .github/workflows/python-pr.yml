@@ -30,7 +30,7 @@ jobs:
         pip install -r requirements_dev.txt
     - name: Lint check with ruff
       run: |
-        ruff .
+        ruff check .
     - name: Type hint check with mypy
       run: |
         mypy .
