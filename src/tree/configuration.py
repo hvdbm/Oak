@@ -12,6 +12,7 @@ class TreeConfiguration():
     node_config: NodeConfig = NodeConfig(**{}),
     person_label_config: PersonLabelConfig = PersonLabelConfig(**{}),
     title_config: TitleConfig = TitleConfig(**{}),
+    ignore: list[str] = []
   ):
     self.background_color = background_color
     self.edge_config = edge_config
@@ -19,6 +20,7 @@ class TreeConfiguration():
     self.node_config = node_config
     self.person_label_config = person_label_config
     self.title_config = title_config
+    self.ignore = ignore
   
   @classmethod
   def from_path(cls, path: str | None):

@@ -1,9 +1,9 @@
 class FontConfig():
   def __init__(self,
-    font: str = "Times-Roman",
-    font_size: float = 12,
-    font_color: str = "black"
+    fontcolor: str = "black",
+    fontname: str = "Times-Roman",
+    fontsize: float = 12,
   ):
-    self.font = font
-    self.font_size = font_size
-    self.font_color = font_color
+    self.fontcolor = fontcolor
+    self.fontname = fontname
+    self.fontsize = fontsize

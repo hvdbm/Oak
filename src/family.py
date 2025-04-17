@@ -21,7 +21,7 @@ class Family():
   def __init__(self,
     name: str | None = None,
     members: dict[str, Person] = {},
-    path_info: FamilyPathInfos = None
+    path_info: FamilyPathInfos | None = None
   ):
     self.name = name
     self.members = members
@@ -44,8 +44,8 @@ class Family():
 
     path_info = FamilyPathInfos(path)
 
-    members = {}
-    names = []
+    members: dict[str, Person] = {}
+    names: list[str] = []
 
     try:
       for file in path_info.files:
@@ -53,12 +53,12 @@ class Family():
         for m in family["members"]:
           person = Person(**m)
           members[person.id] = person
-        if "name" in family.keys() : names.append(family["name"])
+        if "name" in family : names.append(family["name"])
     except Exception as e:
       print(f'Error: Could not read the family from file "{file}": {e}')
     
-    names = " / ".join(names) if len(names) > 0 else None
-    return cls(names, members, path_info)
+    family_name = " / ".join(names) if len(names) > 0 else None
+    return cls(family_name, members, path_info)
     
   def find_n_descendants(self, person: Person) -> int:
     """
@@ -72,16 +72,63 @@ class Family():
     """
 
     if person.childrens == []: return 0
-    if person.n_descendants != None: return person.n_descendants
+    if person.n_descendants is not None: return person.n_descendants
 
     n = 0
     for children in person.childrens:
-      if children not in self.members.keys(): continue
+      if children not in self.members: continue
       n += self.find_n_descendants(self.members[children])+1
     return n
+  
+  def is_only_child(self, id: str) -> bool:
+    """
+    Check if a person is an only child. Doesn't count half-siblings.
+
+    Parameters:
+      id (str): The id of the person to check.
+
+    Returns:
+      bool: If the person is an only child.
+    """
+    if id not in self.members: return False
+
+    for parent in self.members[id].parents:
+      if parent not in self.members: continue
+      if len(self.members[parent].childrens) == 1: return True
+
+    return False
+
+  def remove_person(self, id: str) -> None:
+    """
+    Remove a person from the family.
+
+    Parameters:
+      id (str): The id of the person to remove.
+
+    Returns:
+      None
+    """
+    if id in self.members:
+      del self.members[id]
+
+    for person in self.members.values():
+      person.n_descendants = None
+
+      if id in person.parents: 
+        person.parents = [i for i in person.parents if i != id]
+      if id in person.spouses:
+        person.spouses = [i for i in person.spouses if i != id]
+      if id in person.childrens:
+        person.childrens = [i for i in person.childrens if i != id]
+    
+    for person in self.members.values():
+      person.n_descendants = self.find_n_descendants(person)
 
   def to_df(self) -> pd.DataFrame:
     """
     Convert the list of members of the family as a Pandas dataframe with the properties of a Person as columns.
+    
+    Returns:
+      pd.DataFrame: the list of members as a dataframe.
     """
     return pd.DataFrame([vars(x) for x in self.members.values()])

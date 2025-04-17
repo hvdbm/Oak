@@ -1,10 +1,27 @@
-# Oak
+# Oak 🌳
 
 Group of tools to work with genealogical data.
 
 ## Installation
 
-Install dependencies with `pip install -r requirements.txt`.
+The project needs an installation of [Graphviz](https://graphviz.org) for the `pygraphviz` package (instructions available [here](https://pygraphviz.github.io/documentation/stable/install.html)).
+
+A [devcontainer](https://code.visualstudio.com/docs/devcontainers/create-dev-container) with a default environnement is also available. 
+
+### Python dependencies
+
+The Python dependencies for our different tools can be installed with : 
+
+```
+pip install -r requirements.txt
+```
+
+The Python dev dependencies to review the code can be installed with : 
+
+```
+pip install -r requirements_dev.txt
+```
+
 
 ## Data
 
@@ -27,7 +44,7 @@ options:
 
 ### oak_tree
 
-Visualize a family tree based on the [Graphviz](https://graphviz.org) software :
+Visualize a family tree based on the Graphviz software :
 
 ```
 usage: oak_tree.py [-h] --input_path INPUT_PATH [--config_file_path CONFIG_FILE_PATH] [--output_dir OUTPUT_DIR]
@@ -35,8 +52,8 @@ usage: oak_tree.py [-h] --input_path INPUT_PATH [--config_file_path CONFIG_FILE_
 options:
   -h, --help            show this help message and exit
   --input_path INPUT_PATH, -i INPUT_PATH
-                        Path to the family data.
-  --config_file_path CONFIG_FILE_PATH
+                        Path to the file containing the family data.
+  --config_file_path CONFIG_FILE_PATH, -c CONFIG_FILE_PATH
                         Path to the YAML file containing configuration of the family tree. This file is optionnal.
   --output_dir OUTPUT_DIR, -o OUTPUT_DIR
                         Path to the output directory. Take current folder as default.

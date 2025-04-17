@@ -5,3 +5,7 @@ __pycache__
 *.yaml
 *.png
 *.csv
+
+# Exceptions
+!.devcontainer/devcontainer.json
+!.github/workflows/*.yml
