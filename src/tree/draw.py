@@ -154,11 +154,19 @@ def generate_generations(
     for children in person.childrens:
       generate_generations(family.members[children], family, generations, current_generation+1, already_seen, tree, childrens_subgraphs)
 
-def draw_tree(
-  family: Family,
-  config: TreeConfiguration,
-  output_file_path: str,
-) -> None:
+def get_persons_list(family: Family, config: TreeConfiguration) -> list[Person]:
+  """
+  Get the list of persons to draw in the tree, ordered by number of descendants.
+  The persons are filtered by the ignore list in the configuration.
+  If a start person is defined, it will be moved to the first position.
+
+  Parameters:
+    family (Family): the family object with all the relatives of the person.
+    config (TreeConfiguration): the configuration of the tree.
+  Returns:
+    list[Person]: the list of persons to draw in the tree.
+  """
+
   # Remove ignored persons
   for person_id in config.ignore:
     family.remove_person(person_id)
@@ -168,7 +176,7 @@ def draw_tree(
   persons.sort(key=lambda x : x.n_descendants if x.n_descendants is not None else 0)
   persons.reverse()
 
-  # If a start person is defined, filter the persons to only include the descendants of the start person
+  # If a start person is defined, move it to the first position
   if config.start_person is not None:
     start_person = family.members.get(config.start_person)
 
@@ -179,6 +187,16 @@ def draw_tree(
     
     # Move the start person to the first position
     persons.insert(0, persons.pop(idx))
+  
+  return persons
+
+def draw_tree(
+  family: Family,
+  config: TreeConfiguration,
+  output_file_path: str,
+) -> None:
+  # List of persons to draw
+  persons = get_persons_list(family, config)
 
   # Init graph
   tree = pgv.AGraph(
