@@ -179,6 +179,8 @@ def get_persons_list(family: Family, config: TreeConfiguration) -> list[Person]:
   # If a start person is defined, move it to the first position
   if config.start_person is not None:
     start_person = family.members.get(config.start_person)
+    if start_person is None:
+      raise ValueError(f"Start person with id '{config.start_person}' not found in the family tree.")
 
     # Find index of the start person
     idx = persons.index(start_person)
