@@ -1,5 +1,6 @@
 import pygraphviz as pgv
 
+from src.utils import apply_dict
 from src.tree.configuration import TreeConfiguration
 from src.person import Person
 from src.family import Family
@@ -167,6 +168,18 @@ def draw_tree(
   persons.sort(key=lambda x : x.n_descendants if x.n_descendants is not None else 0)
   persons.reverse()
 
+  # If a start person is defined, filter the persons to only include the descendants of the start person
+  if config.start_person is not None:
+    start_person = family.members.get(config.start_person)
+
+    # Find index of the start person
+    idx = persons.index(start_person)
+    if idx == -1:
+      raise ValueError(f"Start person with id '{config.start_person}' not found in the family tree.")
+    
+    # Move the start person to the first position
+    persons.insert(0, persons.pop(idx))
+
   # Init graph
   tree = pgv.AGraph(
     splines="ortho",
@@ -230,13 +243,6 @@ def draw_tree(
 
   tree.layout(prog='dot')
   tree.draw(output_file_path)
-
-def apply_dict(
-  obj: dict,
-  dict: dict
-) -> None:
-  for key, value in dict.items():
-    obj[key] = value
 
 def apply_node_style(
   tree: pgv.AGraph,
