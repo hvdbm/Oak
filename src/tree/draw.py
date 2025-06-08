@@ -1,5 +1,6 @@
 import pygraphviz as pgv
 
+from src.utils import apply_dict
 from src.tree.configuration import TreeConfiguration
 from src.person import Person
 from src.family import Family
@@ -153,11 +154,19 @@ def generate_generations(
     for children in person.childrens:
       generate_generations(family.members[children], family, generations, current_generation+1, already_seen, tree, childrens_subgraphs)
 
-def draw_tree(
-  family: Family,
-  config: TreeConfiguration,
-  output_file_path: str,
-) -> None:
+def get_persons_list(family: Family, config: TreeConfiguration) -> list[Person]:
+  """
+  Get the list of persons to draw in the tree, ordered by number of descendants.
+  The persons are filtered by the ignore list in the configuration.
+  If a start person is defined, it will be moved to the first position.
+
+  Parameters:
+    family (Family): the family object with all the relatives of the person.
+    config (TreeConfiguration): the configuration of the tree.
+  Returns:
+    list[Person]: the list of persons to draw in the tree.
+  """
+
   # Remove ignored persons
   for person_id in config.ignore:
     family.remove_person(person_id)
@@ -166,6 +175,30 @@ def draw_tree(
   persons = list(family.members.values())
   persons.sort(key=lambda x : x.n_descendants if x.n_descendants is not None else 0)
   persons.reverse()
+
+  # If a start person is defined, move it to the first position
+  if config.start_person is not None:
+    start_person = family.members.get(config.start_person)
+    if start_person is None:
+      raise ValueError(f"Start person with id '{config.start_person}' not found in the family tree.")
+
+    # Find index of the start person
+    idx = persons.index(start_person)
+    if idx == -1:
+      raise ValueError(f"Start person with id '{config.start_person}' not found in the family tree.")
+    
+    # Move the start person to the first position
+    persons.insert(0, persons.pop(idx))
+  
+  return persons
+
+def draw_tree(
+  family: Family,
+  config: TreeConfiguration,
+  output_file_path: str,
+) -> None:
+  # List of persons to draw
+  persons = get_persons_list(family, config)
 
   # Init graph
   tree = pgv.AGraph(
@@ -230,13 +263,6 @@ def draw_tree(
 
   tree.layout(prog='dot')
   tree.draw(output_file_path)
-
-def apply_dict(
-  obj: dict,
-  dict: dict
-) -> None:
-  for key, value in dict.items():
-    obj[key] = value
 
 def apply_node_style(
   tree: pgv.AGraph,
