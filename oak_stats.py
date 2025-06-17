@@ -55,27 +55,31 @@ def main(input_path: str, output_dir: str) -> None:
   )
 
   plot_bar(
-    family_df["last_name"].value_counts(),
+    family_df,
+    "last_name",
     f'Last Name Repartition \n of "{family.name}"',
     os.path.join(output_dir, "last_name_repartition.png")
   )
 
   plot_bar(
-    family_df["first_name"].value_counts(),
+    family_df,
+    "first_name",
     f'First Name Repartition \n of "{family.name}"',
     os.path.join(output_dir, "first_name_repartition.png")
   )
 
   plot_bar(
-    family_df["number_spouses"].value_counts(),
+    family_df,
+    "number_spouses",
     f'Number of Spouses Repartition \n of "{family.name}"',
     os.path.join(output_dir, "spouses_repartition.png")
   )
 
   plot_bar(
-    family_df["number_childrens"].value_counts(),
+    family_df,
+    "number_childrens",
     f'Number of Children Repartition \n of "{family.name}"',
-    os.path.join(output_dir, "children_repartition.png")
+    os.path.join(output_dir, "childrens_repartition.png")
   )
 
 if __name__ == "__main__":
