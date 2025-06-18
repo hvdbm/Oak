@@ -1,9 +1,10 @@
 import pygraphviz as pgv
 
-from src.utils import apply_dict
-from src.tree.configuration import TreeConfiguration
-from src.person import Person
 from src.family import Family
+from src.person import Person
+from src.tree.configuration import TreeConfiguration
+from src.utils import apply_dict
+
 
 def get_union_name(parents: list[str]) -> str:
   """

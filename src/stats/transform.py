@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def convert_column_to_int(data: pd.DataFrame, column: str) -> pd.DataFrame:
   """
   Convert a column to integer type.

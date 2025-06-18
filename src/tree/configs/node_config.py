@@ -1,5 +1,6 @@
 from src.tree.configs.font_config import FontConfig
 
+
 class NodeStyle(FontConfig):
   def __init__(self,
     id: str = "",

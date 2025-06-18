@@ -1,7 +1,9 @@
 from argparse import ArgumentParser
 
 from src.family import Family
-from src.inspect.check import check_errors, check_events, check_nationalities, check_warnings
+from src.inspect.check import (check_errors, check_events, check_nationalities,
+                               check_warnings)
+
 
 def splitter(len: int = 100) -> None:
   print("="*len)

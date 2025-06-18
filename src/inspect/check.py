@@ -1,5 +1,6 @@
 from src.family import Family
 
+
 def check_errors(family: Family) -> None:
   """
   Check for errors in the family data and print them.
