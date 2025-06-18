@@ -1,10 +1,11 @@
-from argparse import ArgumentParser
 import os
+from argparse import ArgumentParser
 
 from src.family import Family
-from src.stats.transform import convert_column_to_int
 from src.stats.evolution import plot_swarm
-from src.stats.repartition import plot_pie, plot_bar
+from src.stats.repartition import plot_bar, plot_pie
+from src.stats.transform import convert_column_to_int
+
 
 def main(input_path: str, output_dir: str) -> None:
   output_dir += "/stats"

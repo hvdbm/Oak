@@ -3,6 +3,7 @@ import pycountry
 from src.person import Person
 from src.tree.label import bold, newline
 
+
 class PersonLabelConfig():
   def __init__(self,
     bold_names: bool = True,

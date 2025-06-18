@@ -1,4 +1,5 @@
 import json
+
 import yaml
 
 ACCEPTED_EXTENSIONS = ["json", "yaml", "yml"]

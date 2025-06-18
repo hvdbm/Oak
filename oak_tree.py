@@ -1,8 +1,9 @@
-from argparse import ArgumentParser
 import os
+from argparse import ArgumentParser
 
 from src.family import Family
-from src.tree.draw import draw_tree, TreeConfiguration
+from src.tree.draw import TreeConfiguration, draw_tree
+
 
 def main(input_path: str, config_file_path: str | None, output_dir: str) -> None:
   if not os.path.exists(output_dir): os.makedirs(output_dir)

@@ -6,6 +6,7 @@ import pandas as pd
 from src.person import Person
 from src.utils import ACCEPTED_EXTENSIONS, read_file_as_dict
 
+
 class FamilyPathInfos():
   def __init__(self, path: str):
     self.path = path

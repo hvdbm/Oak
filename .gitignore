@@ -1,10 +1,18 @@
+# Byte-compiled / optimized / DLL files
 __pycache__
 .DS_Store
+
+# Input / output files
 *.json
+*.txt
 *.yml
 *.yaml
 *.png
 *.csv
+
+# Packaging
+build/
+*.egg-info/
 
 # Exceptions
 !.devcontainer/devcontainer.json

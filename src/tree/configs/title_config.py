@@ -1,5 +1,6 @@
-from src.tree.label import bold, newline
 from src.tree.configs.font_config import FontConfig
+from src.tree.label import bold, newline
+
 
 class TitleConfig(FontConfig):
   def __init__(self,

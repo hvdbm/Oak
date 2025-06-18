@@ -13,15 +13,14 @@ A [devcontainer](https://code.visualstudio.com/docs/devcontainers/create-dev-con
 The Python dependencies for our different tools can be installed with : 
 
 ```
-pip install -r requirements.txt
+pip install .
 ```
 
 The Python dev dependencies to review the code can be installed with : 
 
 ```
-pip install -r requirements_dev.txt
+pip install .[dev]
 ```
-
 
 ## Data
 

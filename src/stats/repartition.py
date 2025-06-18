@@ -4,6 +4,7 @@ import seaborn as sns
 
 from . import FIG_SIZE
 
+
 def plot_pie(value_counts: pd.Series, title: str, output_path: str) -> None:
   """
   Plot a pie chart of the repartition of a categorical variable.
