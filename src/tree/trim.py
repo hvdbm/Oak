@@ -1,6 +1,7 @@
 from src.family import Family
 from src.tree.configs.trim_config import TrimConfig
 
+
 def keep_only_descendants(family: Family, descendants_of: str) -> None:
   """
   Remove the persons which are not the descendants of the specified id "descendants_of". 

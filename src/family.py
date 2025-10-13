@@ -6,6 +6,7 @@ import pandas as pd
 from src.person import Person
 from src.utils import ACCEPTED_EXTENSIONS, read_file_as_dict
 
+
 class FamilyPathInfos():
   def __init__(self, path: str):
     self.path = path
@@ -101,7 +102,7 @@ class Family():
       list[str]: The ids of the descendants of the person.
       list[str]: The ids of the descendants's spouses of the person.
     """
-    if id not in self.members: return []
+    if id not in self.members: return ([], [])
 
     descendants = []
     spouses = []
