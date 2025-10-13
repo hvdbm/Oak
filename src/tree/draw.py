@@ -4,7 +4,7 @@ from src.family import Family
 from src.person import Person
 from src.tree.configuration import TreeConfiguration
 from src.utils import apply_dict
-
+from src.tree.trim import trim
 
 def get_union_name(parents: list[str]) -> str:
   """
@@ -112,6 +112,7 @@ def add_parents_to_tree(
   for parent in person.parents:
     generate_generations(family.members[parent], family, generations, current_generation-1, already_seen, tree, childrens_subgraphs)
 
+
 def generate_generations(
   person: Person,
   family: Family,
@@ -142,6 +143,7 @@ def generate_generations(
       generations[current_generation].add_member(spouse)
       already_seen.add(spouse)
 
+      # Add edge between the spouses and their union node
       tree.add_edge(person.id, union_name)
       tree.add_edge(union_name, spouse)
 
@@ -167,12 +169,10 @@ def get_persons_list(family: Family, config: TreeConfiguration) -> list[Person]:
   Returns:
     list[Person]: the list of persons to draw in the tree.
   """
+  # Trim the family tree by removing unwanted members
+  trim(family, config.trim_config)
 
-  # Remove ignored persons
-  for person_id in config.ignore:
-    family.remove_person(person_id)
-
-  # Order persons of the family by n_descendants descending order
+  # Order remaining members of the family by n_descendants descending order
   persons = list(family.members.values())
   persons.sort(key=lambda x : x.n_descendants if x.n_descendants is not None else 0)
   persons.reverse()

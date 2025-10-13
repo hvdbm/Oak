@@ -51,7 +51,7 @@ def main(input_path: str, output_dir: str) -> None:
 if __name__ == "__main__":
   parser = ArgumentParser()
 
-  parser.add_argument("--input_path", "-i", type=str, required=True, help="Path to the file containing the family data.")
+  parser.add_argument("--input_path", "-i", type=str, required=True, help="Path to the family data (a file or a folder).")
   parser.add_argument("--output_dir", "-o", type=str, default=".", help="Path to the output directory. Take current folder as default.")
 
   args = parser.parse_args()
