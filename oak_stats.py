@@ -11,8 +11,7 @@ def main(input_path: str, output_dir: str) -> None:
   output_dir += "/stats"
   if not os.path.exists(output_dir): os.makedirs(output_dir)
   
-  family = Family.from_path(input_path)
-  family_df = family.to_df()
+  family_df = Family.from_path(input_path).to_df()
 
   # Plot evolution
   plot_swarm(
@@ -30,7 +29,7 @@ def main(input_path: str, output_dir: str) -> None:
     os.path.join(output_dir, "sex_repartition.png")
   )
 
-  plot_pie(
+  plot_bar(
     family_df.explode("nationalities")["nationalities"].value_counts(),
     f'Nationalities repartition',
     os.path.join(output_dir, "nationalities_repartition.png")
