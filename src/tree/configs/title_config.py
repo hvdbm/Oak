@@ -15,12 +15,8 @@ class TitleConfig(FontConfig):
 
     FontConfig.__init__(self, **kwargs)
 
-  def get_label(self, label: str | None = None) -> str:
+  def get_label(self) -> str:
     if not self.enabled: return ""
-    if self.title is None and label is None: return ""
+    if self.title is None: return ""
 
-    # Override the label if a title is provided
-    text = self.title if self.title is not None else label
-    if text is None: return ""
-
-    return f"<{bold(text)} {newline()} >"
+    return f"<{bold(self.title)} {newline()} >"

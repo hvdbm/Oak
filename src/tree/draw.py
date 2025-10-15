@@ -206,7 +206,7 @@ def draw_tree(
   tree = pgv.AGraph(
     splines="ortho",
     bgcolor=config.background_color,
-    label=config.title_config.get_label(family.name),
+    label=config.title_config.get_label(),
     labelloc=config.title_config.location,
     fontcolor=config.title_config.fontcolor,
     fontname=config.title_config.fontname,

@@ -19,32 +19,32 @@ def main(input_path: str, output_dir: str) -> None:
     convert_column_to_int(family_df.explode("nationalities"), "birth_year"),
     "birth_year",
     "nationalities",
-    f'Evolution of Nationalities \n of "{family.name}" in time',
+    f'Evolution of nationalities in time',
     os.path.join(output_dir, "nationalities_evolution.png")
   )
 
   # Plot repartition
   plot_pie(
     family_df["sex"].value_counts(),
-    f'Sex Repartition \n of "{family.name}"',
+    f'Sex repartition',
     os.path.join(output_dir, "sex_repartition.png")
   )
 
   plot_pie(
     family_df.explode("nationalities")["nationalities"].value_counts(),
-    f'Nationalities Repartition \n of "{family.name}"',
+    f'Nationalities repartition',
     os.path.join(output_dir, "nationalities_repartition.png")
   )
 
   plot_bar(
     family_df["last_name"].value_counts(),
-    f'Last Name Repartition \n of "{family.name}"',
+    f'Last Name repartition',
     os.path.join(output_dir, "last_name_repartition.png")
   )
 
   plot_bar(
     family_df["first_name"].value_counts(),
-    f'First Name Repartition \n of "{family.name}"',
+    f'First Name repartition',
     os.path.join(output_dir, "first_name_repartition.png")
   )
 
