@@ -12,7 +12,7 @@ def plot_pie(value_counts: pd.Series, title: str, output_path: str) -> None:
   Parameters:
     value_counts (pd.Series): The value counts of the categorical variable.
     title (str): The title of the plot.
-    output_path (str): The path to save the plot
+    output_path (str): The path to save the plot.
   
   Returns:
     None
@@ -26,6 +26,7 @@ def plot_pie(value_counts: pd.Series, title: str, output_path: str) -> None:
     colors=sns.color_palette('Set2'),
   )
   plt.title(title, weight='bold')
+  plt.tight_layout()
   plt.savefig(output_path)
   plt.close()
 
@@ -36,18 +37,24 @@ def plot_bar(value_counts: pd.Series, title: str, output_path: str, horizontal: 
   Parameters:
     value_counts (pd.Series): The value counts of the categorical variable.
     title (str): The title of the plot.
-    output_path (str): The path to save the plot
-    horizontal (bool): Whether to plot the bar chart horizontally or vertically
+    output_path (str): The path to save the plot.
+    horizontal (bool): Whether to plot the bar chart horizontally or vertically.
   
   Returns:
     None
   """
-  plt.subplots(figsize=FIG_SIZE)
+  
   value_counts = value_counts.sort_values(ascending=True) # Sort by count
+  bar_height_per_item = 0.15
 
-  if horizontal: plt.barh(value_counts.keys(), value_counts.values)
-  else: plt.bar(value_counts.keys(), value_counts.values)
+  if horizontal:
+    plt.subplots(figsize=(FIG_SIZE[0], max(len(value_counts)*bar_height_per_item, FIG_SIZE[1])))
+    plt.barh(value_counts.keys(), value_counts.values)
+  else:
+    plt.subplots(figsize=(max(len(value_counts)*bar_height_per_item, FIG_SIZE[0]), FIG_SIZE[1]))
+    plt.bar(value_counts.keys(), value_counts.values)
   
   plt.title(title, weight='bold')
+  plt.tight_layout()
   plt.savefig(output_path)
   plt.close()
