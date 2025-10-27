@@ -104,4 +104,4 @@ options:
   --weighted            Use the real number of ancestors as width for each sector
 ```
 
-You may have to install additionnal packages to write the sunburst as an image.
+You may have to install additionnal packages to save the sunburst as an image.

@@ -23,7 +23,7 @@ Config to customize how the text of a person is rendered (the label of a node). 
 
 |Field|Type|Description|Default value|
 |-----|-----|-----|-----|
-|`bold_names`         | `bool`  | Bold the label                                        | `True`  |
+|`bold_names`         | `bool`  | Bold the first and last names                         | `True`  |
 |`show_nationalities` | `bool`  | Show the nationalities as flag                        | `True`  |
 |`show_nickname`      | `bool`  | Show the nickname (in quotes)                         | `True`  |
 |`show_years`         | `bool`  | Show the birth and death years                        | `True`  |

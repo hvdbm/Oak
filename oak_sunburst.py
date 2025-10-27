@@ -32,7 +32,7 @@ if __name__ == "__main__":
   parser.add_argument("--person_id", "-p", type=str, required=True, help="ID of the person to center the sunburst on.")
   parser.add_argument("--output_dir", "-o",  default=None, help="Path to the output directory. Default to None, no file is saved.")
   parser.add_argument("--output_filename", "-fi", type=str, default="sunburst", help="Name of the file. Default to 'suburst'.")
-  parser.add_argument("--output_format", "-fo", type=str, default="png", help="Extension of the output file. Accepted format : 'png', 'jpg', 'jpeg', 'webp', 'svg', 'pdf', 'html'. Default to 'png'.")
+  parser.add_argument("--output_format", "-fo", type=str, default="html", help="Extension of the output file. Accepted format : 'png', 'jpg', 'jpeg', 'webp', 'svg', 'pdf', 'html'. Default to 'html'.")
   parser.add_argument("--max_depth", "-d", type=int, default=-1, help="Maximum number of layer to renderer. Default to -1 to show the complete hiearchy.")
   parser.add_argument("--no_interactive", action="store_true", help="Don't show the interactive sunburst window with Plotly.")
   parser.add_argument("--weighted", action="store_true", help="Use the real number of ancestors as width for each sector")
