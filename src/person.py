@@ -33,3 +33,8 @@ class Person():
 
     # Calculated properties
     self.n_descendants: int | None = None
+
+  def full_name(self) -> str:
+    name = f"{self.first_name} {self.last_name}"
+    if self.suffix is not None: name += f" {self.suffix}"
+    return name
