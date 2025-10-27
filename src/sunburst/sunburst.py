@@ -10,6 +10,18 @@ def get_ancestors_sunburst_data(
     person_id: str,
     depth_dict: dict[str] = {}
 ) -> tuple[list[str], list[str], dict[str]]:
+    """
+    Get the sunburst data (ids, parents, depths) for the ancestors of a person.
+
+    Parameters:
+        family (Family): The family object.
+        person_id (str): The id of the person to get the ancestors for.
+        depth_dict (dict[str, int]): A dictionary to store the depth of each person.
+
+    Returns:
+        tuple[list[str], list[str], dict[str]]: A tuple containing the list of person ids,
+        the list of parent ids, and the depth dictionary.
+    """
     persons, parents = [], []
 
     if person_id not in family.members: return persons, parents, depth_dict
@@ -42,6 +54,18 @@ def get_ancestors_sunburst_data(
     return persons, parents, depth_dict
 
 def write_image(fig: go.Figure, output_dir: str | None, output_filename: str, output_format: str) -> None:
+    """
+    Write the figure to an image file.
+
+    Parameters:
+      fig (go.Figure): The figure to write.
+      output_dir (str | None): The output directory. If None, no file is saved.
+      output_filename (str): The name of the output file.
+      output_format (str): The format of the output file. Accepted formats: 'png', 'jpg', 'jpeg', 'webp', 'svg', 'pdf', 'html'.
+
+    Returns:
+        None
+    """
     if output_dir is None: return
 
     if not os.path.exists(output_dir): os.makedirs(output_dir)
@@ -64,6 +88,19 @@ def draw_sunburst(
     no_interactive: bool,
     weighted: bool
 ) -> None:
+    """
+    Draw a sunburst chart of the ancestors of a person in the family.
+
+    Parameters:
+        family (Family): The family object.
+        person_id (str): The id of the person to draw the sunburst for.
+        output_dir (str | None): The output directory. If None, no file is saved.
+        output_filename (str): The name of the output file.
+        output_format (str): The format of the output file.
+        max_depth (int): The maximum depth to display in the sunburst. -1 for no limit.
+        no_interactive (bool): If True, do not show the interactive sunburst window.
+        weighted (bool): If True, use the real number of ancestors as width for each sector
+    """
     persons, parents, depth_dict = get_ancestors_sunburst_data(family, person_id)
     max_depth_dict = max(depth_dict.values()) if len(depth_dict) > 0 else 0
 
