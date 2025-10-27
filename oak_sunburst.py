@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 from src.family import Family
 from src.sunburst.sunburst import draw_sunburst
 
+
 def main(
   input_path: str,
   person_id: str,

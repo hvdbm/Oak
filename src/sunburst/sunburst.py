@@ -8,8 +8,8 @@ from src.family import Family
 def get_ancestors_sunburst_data(
     family: Family,
     person_id: str,
-    depth_dict: dict[str] = {}
-) -> tuple[list[str], list[str], dict[str]]:
+    depth_dict: dict[str, int] = {}
+) -> tuple[list[str], list[str], dict[str, int]]:
     """
     Get the sunburst data (ids, parents, depths) for the ancestors of a person.
 
@@ -22,7 +22,8 @@ def get_ancestors_sunburst_data(
         tuple[list[str], list[str], dict[str]]: A tuple containing the list of person ids,
         the list of parent ids, and the depth dictionary.
     """
-    persons, parents = [], []
+    persons: list[str] = []
+    parents: list[str] = []
 
     if person_id not in family.members: return persons, parents, depth_dict
     
