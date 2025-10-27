@@ -5,8 +5,8 @@
 The file can specified the following fields to customize the tree :
 |Field|Type|Description|Default value|
 |-----|-----|-----|-----|
-|`background_color`     | `str`               | Color of the background of the image. See [Color Names of Graphviz](https://graphviz.org/doc/info/colors.html). | `""`  |
-|`filename`             | `str`               | Name of the generated file.                                                                                     | `"family_tree.png"` |
+|`background_color`     | `str`               | Color of the background of the image. See [Color Names of Graphviz](https://graphviz.org/doc/info/colors.html)   | `""`  |
+|`filename`             | `str`               | Name of the generated file                                                                                       | `"family_tree.png"` |
 |`person_label_config`  | `PersonLabelConfig` | TODO | / |
 |`title_config`         | `TitleConfig`       | TODO | / |
 |`trim_config`          | `TrimConfig`        | TODO | / |
@@ -44,6 +44,6 @@ Config to select the persons to show in tree. In the field `trim_config` :
 
 |Field|Type|Description|Default value|
 |-----|-----|-----|-----|
-|`descendants_of`               | `str`       | ID of the person whose only the descendants will be kept in the tree          | `None`  |
-|`ignore`                       | `list[str]` | List of id of persons to ignore in the family tree                            | `[]`    |
-|`ignore_incomplete_relations`  | `bool`      | Ignore or not the relations who point to a person who doesn't exist in tree.  | `False` |
+|`descendants_of`               | `str`       | ID of the person whose only the descendants will be kept in the tree   | `None`  |
+|`ignore`                       | `list[str]` | List of id of persons to ignore in the family tree                     | `[]`    |
+|`ignore_incomplete_relations`  | `bool`      | Ignore the relations with a person who doesn't exist in tree           | `False` |
