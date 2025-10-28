@@ -3,56 +3,9 @@ import os
 import plotly.graph_objects as go
 
 from src.family import Family
+from src.sunburst.ancestor import count_ancestors, get_ancestors_sunburst_data
+from src.sunburst.descendant import get_descendants_sunburst_data
 
-
-def get_ancestors_sunburst_data(
-    family: Family,
-    person_id: str,
-    depth_dict: dict[str, int] = {}
-) -> tuple[list[str], list[str], dict[str, int]]:
-    """
-    Get the sunburst data (ids, parents, depths) for the ancestors of a person.
-
-    Parameters:
-        family (Family): The family object.
-        person_id (str): The id of the person to get the ancestors for.
-        depth_dict (dict[str, int]): A dictionary to store the depth of each person.
-
-    Returns:
-        tuple[list[str], list[str], dict[str]]: A tuple containing the list of person ids,
-        the list of parent ids, and the depth dictionary.
-    """
-    persons: list[str] = []
-    parents: list[str] = []
-
-    if person_id not in family.members: return persons, parents, depth_dict
-    
-    person_data = family.members[person_id]
-    
-    if len(person_data.childrens) == 0:
-        persons.append(person_id)
-        parents.append("")
-        depth_dict[person_id] = 0
-
-    for parent_id in person_data.parents:
-        if parent_id not in family.members: continue
-
-        # Add ancestor
-        persons.append(parent_id)
-        parents.append(person_id)
-
-        # Update depth
-        max_depth = 0
-        for child in family.members[parent_id].childrens:
-            if child in depth_dict: 
-                max_depth = max(max_depth, depth_dict[child]+1)
-        depth_dict[parent_id] = max_depth
-
-        sub_persons, sub_parents, _ = get_ancestors_sunburst_data(family, parent_id, depth_dict)
-        persons += sub_persons
-        parents += sub_parents
-
-    return persons, parents, depth_dict
 
 def write_image(fig: go.Figure, output_dir: str | None, output_filename: str, output_format: str) -> None:
     """
@@ -79,6 +32,39 @@ def write_image(fig: go.Figure, output_dir: str | None, output_filename: str, ou
     else:
         raise ValueError(f"Unsupported output format: {output_format}")
 
+def generate_sunburst_config(
+    type: str,
+    family: Family,
+    person_id: str,
+    weighted: bool
+):
+    if type == "ancestors":
+        persons, parents, depth_dict = get_ancestors_sunburst_data(family, person_id, [person_id], [""], {person_id: 0})
+
+        # Values
+        max_depth_dict = max(depth_dict.values()) if len(depth_dict) > 0 else 0
+        values = [pow(2, max_depth_dict - depth_dict.get(person, 0)) for person in persons] if weighted else None
+        
+        # Layout field
+        title = f"Ancestors of {family.members[person_id].full_name()}"
+        subtitle = f"{len(persons)-1} ancestors found on {count_ancestors(max_depth_dict)} possible ancestors"
+
+        return persons, parents, values, title, subtitle
+    elif type == "descendants":
+        persons, parents, split_dict = get_descendants_sunburst_data(family, person_id, [person_id], [""], {person_id: 1})
+        
+        # Values
+        n_descendants = len(persons)-1
+        values = [n_descendants * split_dict.get(person, 0) for person in persons] if weighted else None
+
+        # Layout field
+        title = f"Descendants of {family.members[person_id].full_name()}"
+        subtitle = f"{n_descendants} descendants found"
+
+        return persons, parents, values, title, subtitle
+    else:
+        raise ValueError(f"Unsupported sunburst type : {type}")
+
 def draw_sunburst(
     family: Family,
     person_id: str,
@@ -87,7 +73,8 @@ def draw_sunburst(
     output_format: str,
     max_depth: int,
     no_interactive: bool,
-    weighted: bool
+    weighted: bool,
+    type: str
 ) -> None:
     """
     Draw a sunburst chart of the ancestors of a person in the family.
@@ -100,23 +87,23 @@ def draw_sunburst(
         output_format (str): The format of the output file.
         max_depth (int): The maximum depth to display in the sunburst. -1 for no limit.
         no_interactive (bool): If True, do not show the interactive sunburst window.
-        weighted (bool): If True, use the real number of ancestors as width for each sector
+        weighted (bool): If True, use the real number of ancestors as width for each sector.
+        type (str): ...
     """
-    persons, parents, depth_dict = get_ancestors_sunburst_data(family, person_id)
-    max_depth_dict = max(depth_dict.values()) if len(depth_dict) > 0 else 0
+    ids, parents, values, title, subtitle = generate_sunburst_config(type, family, person_id, weighted)
 
     fig = go.Figure(go.Sunburst(
-        ids=persons,
-        labels=[family.members[person].full_name() for person in persons],
+        ids=ids,
+        labels=[family.members[person].full_name() for person in ids],
         parents=parents,
-        values=[pow(2, max_depth_dict - depth_dict.get(person, 0)) for person in persons] if weighted else None,
+        values=values,
         branchvalues="total",
         maxdepth=max_depth,
     ))
 
     fig.update_layout(
-        title_text=f"Ancestors of {family.members[person_id].full_name()}",
-        title_subtitle_text=f"{len(persons)-1} ancestors found on {pow(2, max_depth_dict)} possible ancestors"
+        title_text=title,
+        title_subtitle_text=subtitle
     )
 
     if not no_interactive: fig.show()
