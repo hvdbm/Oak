@@ -32,18 +32,32 @@ def write_image(fig: go.Figure, output_dir: str | None, output_filename: str, ou
     else:
         raise ValueError(f"Unsupported output format: {output_format}")
 
-def generate_sunburst_config(
+def generate_sunburst_data(
     type: str,
     family: Family,
     person_id: str,
-    weighted: bool
-):
+    equally_weighted: bool
+) -> tuple[list[str], list[str], list[float] | None, str, str]:
+    """
+    Generate the data for the sunburst chart.
+
+    Parameters:
+        type (str): Type of relationship to render. Either "ancestors" or "descendants".
+        family (Family): The family object.
+        person_id (str): The id of the person to draw the sunburst for.
+        equally_weighted (bool): If True, weight all sectors at the same depth equally.
+
+    Returns:
+        tuple[list[str], list[str], list[float] | None, str, str]: tuple with the list of persons, the list of parents, the list of values, the title and the subtitle.
+    """
+
     if type == "ancestors":
+        # Persons data
         persons, parents, depth_dict = get_ancestors_sunburst_data(family, person_id, [person_id], [""], {person_id: 0})
 
         # Values
         max_depth_dict = max(depth_dict.values()) if len(depth_dict) > 0 else 0
-        values = [pow(2, max_depth_dict - depth_dict.get(person, 0)) for person in persons] if weighted else None
+        values = [pow(2, max_depth_dict - depth_dict.get(person, 0)) for person in persons] if equally_weighted else None
         
         # Layout field
         title = f"Ancestors of {family.members[person_id].full_name()}"
@@ -51,11 +65,12 @@ def generate_sunburst_config(
 
         return persons, parents, values, title, subtitle
     elif type == "descendants":
-        persons, parents, split_dict = get_descendants_sunburst_data(family, person_id, [person_id], [""], {person_id: 1})
+        # Persons data
+        persons, parents, repartition_dict = get_descendants_sunburst_data(family, person_id, [person_id], [""], {person_id: 1})
         
         # Values
         n_descendants = len(persons)-1
-        values = [n_descendants * split_dict.get(person, 0) for person in persons] if weighted else None
+        values = [n_descendants * repartition_dict.get(person, 0) for person in persons] if equally_weighted else None
 
         # Layout field
         title = f"Descendants of {family.members[person_id].full_name()}"
@@ -73,7 +88,7 @@ def draw_sunburst(
     output_format: str,
     max_depth: int,
     no_interactive: bool,
-    weighted: bool,
+    equally_weighted: bool,
     type: str
 ) -> None:
     """
@@ -87,10 +102,10 @@ def draw_sunburst(
         output_format (str): The format of the output file.
         max_depth (int): The maximum depth to display in the sunburst. -1 for no limit.
         no_interactive (bool): If True, do not show the interactive sunburst window.
-        weighted (bool): If True, use the real number of ancestors as width for each sector.
-        type (str): ...
+        equally_weighted (bool): If True, weight all sectors at the same depth equally.
+        type (str): Type of relationship to render. Either "ancestors" or "descendants".
     """
-    ids, parents, values, title, subtitle = generate_sunburst_config(type, family, person_id, weighted)
+    ids, parents, values, title, subtitle = generate_sunburst_data(type, family, person_id, equally_weighted)
 
     fig = go.Figure(go.Sunburst(
         ids=ids,

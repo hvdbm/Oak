@@ -83,8 +83,8 @@ options:
 Generate a family as a sunburst with Plotly :
 
 ```
-usage: oak_sunburst.py [-h] --input_path INPUT_PATH --person_id PERSON_ID [--output_dir OUTPUT_DIR] [--output_filename OUTPUT_FILENAME] [--output_format OUTPUT_FORMAT]
-                       [--max_depth MAX_DEPTH] [--no_interactive] [--weighted]
+usage: oak_sunburst.py [-h] --input_path INPUT_PATH --person_id PERSON_ID [--output_dir OUTPUT_DIR] [--output_filename OUTPUT_FILENAME] [--output_format OUTPUT_FORMAT] [--max_depth MAX_DEPTH] [--no_interactive]
+                       [--equally_weighted] [--type {ancestors,descendants}]
 
 options:
   -h, --help            show this help message and exit
@@ -97,11 +97,14 @@ options:
   --output_filename OUTPUT_FILENAME, -fi OUTPUT_FILENAME
                         Name of the file. Default to 'suburst'.
   --output_format OUTPUT_FORMAT, -fo OUTPUT_FORMAT
-                        Extension of the output file. Accepted format : 'png', 'jpg', 'jpeg', 'webp', 'svg', 'pdf', 'html'. Default to 'png'.
+                        Extension of the output file. Accepted format : 'png', 'jpg', 'jpeg', 'webp', 'svg', 'pdf', 'html'. Default to 'html'.
   --max_depth MAX_DEPTH, -d MAX_DEPTH
                         Maximum number of layer to renderer. Default to -1 to show the complete hiearchy.
-  --no_interactive      Don't show the interactive sunburst window with Plotly.
-  --weighted            Use the real number of ancestors as width for each sector
+  --no_interactive, -ni
+                        Don't show the interactive sunburst window with Plotly.
+  --equally_weighted, -ew
+                        Weight all sectors at the same depth equally.
+  --type {ancestors,descendants}, -t {ancestors,descendants}
 ```
 
 You may have to install additionnal packages to save the sunburst as an image.

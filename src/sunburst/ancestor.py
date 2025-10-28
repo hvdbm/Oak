@@ -24,11 +24,13 @@ def get_ancestors_sunburst_data(
     depth_dict: dict[str, int] = {},
 ) -> tuple[list[str], list[str], dict[str, int]]:
     """
-    Get the sunburst data (ids, parents, depths) for the ancestors of a person.
+    Get the sunburst data (ids, parents, depths) for the ancestors of a person recursively.
 
     Parameters:
         family (Family): The family object.
-        person_id (str): The id of the person to get the ancestors for.
+        person_id (str): The id of the person to get the ancestors for. Default to an empty list.
+        persons (list[str]): List of the persons to plot. Default to an empty list.
+        parents (list[str]): List of the parent of each persons. Default to an empty dict.
         depth_dict (dict[str, int]): A dictionary to store the depth of each person.
 
     Returns:

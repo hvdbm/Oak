@@ -12,7 +12,7 @@ def main(
   output_format: str,
   max_depth: int,
   no_interactive: bool,
-  weighted: bool,
+  equally_weighted: bool,
   sunburst_type: str
 ) -> None:
   family = Family.from_path(input_path)
@@ -25,7 +25,7 @@ def main(
     output_format,
     max_depth,
     no_interactive,
-    weighted,
+    equally_weighted,
     sunburst_type
   )
 
@@ -37,8 +37,8 @@ if __name__ == "__main__":
   parser.add_argument("--output_filename", "-fi", type=str, default="sunburst", help="Name of the file. Default to 'suburst'.")
   parser.add_argument("--output_format", "-fo", type=str, default="html", help="Extension of the output file. Accepted format : 'png', 'jpg', 'jpeg', 'webp', 'svg', 'pdf', 'html'. Default to 'html'.")
   parser.add_argument("--max_depth", "-d", type=int, default=-1, help="Maximum number of layer to renderer. Default to -1 to show the complete hiearchy.")
-  parser.add_argument("--no_interactive", action="store_true", help="Don't show the interactive sunburst window with Plotly.")
-  parser.add_argument("--weighted", action="store_true", help="Use the real number of ancestors as width for each sector.")
+  parser.add_argument("--no_interactive", "-ni", action="store_true", help="Don't show the interactive sunburst window with Plotly.")
+  parser.add_argument("--equally_weighted", "-ew", action="store_true", help="Weight all sectors at the same depth equally.")
   parser.add_argument("--type", "-t", type=str, default="ancestors", choices=["ancestors", "descendants"], help="Type of sunburst to draw: 'ancestors' or 'descendants'. Default to 'ancestors'.")
 
   args = parser.parse_args()
@@ -50,6 +50,6 @@ if __name__ == "__main__":
     args.output_format,
     args.max_depth,
     args.no_interactive,
-    args.weighted,
+    args.equally_weighted,
     args.type
   )
