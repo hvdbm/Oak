@@ -1,5 +1,6 @@
 from src.family import Family
 
+
 def get_descendants_sunburst_data(
     family: Family,
     person_id: str,

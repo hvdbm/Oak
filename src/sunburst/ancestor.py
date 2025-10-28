@@ -1,5 +1,6 @@
 from src.family import Family
 
+
 def count_ancestors(n_generations: int) -> int:
   """
   Calculate the number of ancestors for a given number of generations.
