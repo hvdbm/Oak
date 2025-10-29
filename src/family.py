@@ -51,7 +51,6 @@ class Family():
     Returns:
       Family: The family object.
     """
-
     path_info = FamilyPathInfos(path)
 
     members: dict[str, Person] = {}
@@ -90,13 +89,25 @@ class Family():
       n += self.find_n_descendants(self.members[children])+1
     return n
   
+  def get_ancestors(self, id: str) -> list[str]:
+    if id not in self.members: return []
+
+    ancestors = []
+
+    for parent in self.members[id].parents:
+      if parent not in self.members: continue
+      ancestors.append(parent)
+      ancestors += self.get_ancestors(parent)
+    
+    return ancestors
+
   def get_descendants(self, id: str, include_spouses: bool = False) -> tuple[list[str], list[str]]:
     """
-    Get all descendants of a person.
+    Get all the descendants ids of a person.
 
     Parameters:
       id (str): The id of the person to get the descendants.
-      # include_spouses (bool): Include descendants's spouses in the list.
+      include_spouses (bool): Include descendants's spouses in the list.
 
     Returns:
       list[str]: The ids of the descendants of the person.
