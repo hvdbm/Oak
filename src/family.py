@@ -19,6 +19,8 @@ class FamilyPathInfos():
       self.files = [path]
 
 class Family():
+  n_descendants: dict[str, int] = {}
+
   def __init__(self,
     name: str | None = None,
     members: dict[str, Person] = {},
@@ -36,8 +38,8 @@ class Family():
         value.childrens = [children for children in value.childrens if children in members.keys()]
 
     # Count the number of descendants for each member
-    for value in members.values():
-      value.n_descendants = self.find_n_descendants(value)
+    for person in members.values():
+      self.n_descendants[person.id] = self.__count_n_descendants(person)
 
   @classmethod
   def from_path(cls, path: str, ignore_incomplete_relations: bool = False):
@@ -69,9 +71,9 @@ class Family():
     family_name = " / ".join(names) if len(names) > 0 else None
     return cls(family_name, members, path_info, ignore_incomplete_relations)
     
-  def find_n_descendants(self, person: Person) -> int:
+  def __count_n_descendants(self, person: Person) -> int:
     """
-    Find the number of descendants of a person. This number is calculated recursively.
+    Count the number of descendants of a person. This number is calculated recursively.
 
     Parameters:
       person (Person): The person to find the number of descendants.
@@ -79,14 +81,13 @@ class Family():
     Returns:
       int: The number of descendants of the person.
     """
-
+    if person.id in self.n_descendants: return self.n_descendants.get(person.id)
     if person.childrens == []: return 0
-    if person.n_descendants is not None: return person.n_descendants
 
     n = 0
     for children in person.childrens:
       if children not in self.members: continue
-      n += self.find_n_descendants(self.members[children])+1
+      n += self.__count_n_descendants(self.members[children])+1
     return n
   
   def get_ancestors(self, id: str) -> list[str]:
@@ -164,14 +165,14 @@ class Family():
       if id in self.members: del self.members[id]
 
     for person in self.members.values():
-      person.n_descendants = None
+      self.n_descendants.pop(person.id)
 
       person.parents = [i for i in person.parents if i not in ids]
       person.spouses = [i for i in person.spouses if i not in ids]
       person.childrens = [i for i in person.childrens if i not in ids]
     
     for person in self.members.values():
-      person.n_descendants = self.find_n_descendants(person)
+      self.n_descendants[person.id] = self.__count_n_descendants(person)
 
   def to_df(self) -> pd.DataFrame:
     """
