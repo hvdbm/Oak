@@ -8,10 +8,6 @@ def apply_dict(obj: dict, dict: dict) -> None:
   for key, value in dict.items():
     obj[key] = value
 
-def dict_key_as_object(dict_config: dict, key: str, c) -> None:
-  if key in dict_config:
-    dict_config[key] = c(**dict_config.get(key))
-
 def read_file_as_dict(file_path: str) -> dict:
   extentions = file_path.split(".")[-1]
     

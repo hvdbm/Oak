@@ -44,6 +44,7 @@ Config to select the persons to show in tree. In the field `trim_config` :
 
 |Field|Type|Description|Default value|
 |-----|-----|-----|-----|
-|`descendants_of`               | `str`       | ID of the person whose only the descendants will be kept in the tree   | `None`  |
+|`ancestors_of`               | `AncestorsOfConfig`       | TODO  | `None`  |
+|`descendants_of`               | `DescendantsOfConfig`       | TODO  | `None`  |
 |`ignore`                       | `list[str]` | List of id of persons to ignore in the family tree                     | `[]`    |
 |`ignore_incomplete_relations`  | `bool`      | Ignore the relations with a person who doesn't exist in tree           | `False` |
