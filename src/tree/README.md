@@ -26,6 +26,7 @@ Config to customize how the text of a person is rendered (the label of a node). 
 |`bold_names`         | `bool`  | Bold the first and last names                         | `True`  |
 |`show_nationalities` | `bool`  | Show the nationalities as flag                        | `True`  |
 |`show_nickname`      | `bool`  | Show the nickname (in quotes)                         | `True`  |
+|`show_middle_names`  | `bool`  | Show the list of middle names                         | `False` |
 |`show_years`         | `bool`  | Show the birth and death years                        | `True`  |
 |`split_names`        | `bool`  | Add a return to line between the first and last names | `False` |
 |`upper_last_name`    | `bool`  | Put the last name in uppercase                        | `False` |

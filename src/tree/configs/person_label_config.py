@@ -9,9 +9,10 @@ class PersonLabelConfig(BaseModel):
   bold_names: bool = True
   show_nationalities: bool = True
   show_nickname: bool = True
+  show_middle_names: bool = False
   show_years: bool = True
   split_names: bool = False
-  upper_last_name: bool = False  
+  upper_last_name: bool = False
 
   def get_names_label(self, person: Person) -> str:
     """
@@ -24,6 +25,8 @@ class PersonLabelConfig(BaseModel):
       str: the complete name of a person.
     """
     names = person.first_name
+    
+    if self.show_middle_names: names += f" {" ".join(person.middle_names)}"
     
     if self.split_names: names += newline()
     
