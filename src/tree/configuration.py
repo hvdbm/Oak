@@ -7,6 +7,7 @@ from src.tree.configs.title_config import TitleConfig
 from src.tree.configs.trim_config import TrimConfig
 from src.utils import read_file_as_dict
 
+
 class TreeConfiguration(BaseModel):
   background_color: str = ""
   edge_config: EdgeConfig = EdgeConfig()

@@ -1,7 +1,19 @@
 from src.family import Family
-from src.tree.configs.trim_config import TrimConfig, AncestorsOfConfig, DescendantsOfConfig
+from src.tree.configs.trim_config import (AncestorsOfConfig,
+                                          DescendantsOfConfig, TrimConfig)
+
 
 def keep_only_ancestors(family: Family, config: AncestorsOfConfig) -> None:
+  """
+  Remove the persons which are not the ancestors of the person specified in the config.
+
+  Paremeters:
+    family (Family): the family object with all the persons.
+    config (AncestorsOfConfig): the config of the persons to keep the ancestors.
+
+  Returns:
+    None
+  """
   ancestors = family.get_ancestors(config.of)
   new_family_ids = ancestors + [config.of]
   ids_to_remove = set(family.members.keys()).difference(new_family_ids)
@@ -9,11 +21,11 @@ def keep_only_ancestors(family: Family, config: AncestorsOfConfig) -> None:
 
 def keep_only_descendants(family: Family, config: DescendantsOfConfig) -> None:
   """
-  Remove the persons which are not the descendants of the specified id "config". 
+  Remove the persons which are not the descendants of the person specified in the config.
 
   Paremeters:
     family (Family): the family object with all the persons.
-    config (str): the ID of the persons to keep the descendants.
+    config (DescendantsOfConfig): the config of the persons to keep the descendants.
 
   Returns:
     None

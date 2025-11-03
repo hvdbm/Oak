@@ -81,7 +81,7 @@ class Family():
     Returns:
       int: The number of descendants of the person.
     """
-    if person.id in self.n_descendants: return self.n_descendants.get(person.id)
+    if person.id in self.n_descendants: return self.n_descendants[person.id]
     if person.childrens == []: return 0
 
     n = 0

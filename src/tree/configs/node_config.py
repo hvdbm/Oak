@@ -22,9 +22,7 @@ class ConditionalNodeStyle(BaseModel):
   def __init__(self,
     **kwargs
   ):
-
     super().__init__(**kwargs)
-
     self.style_args = {**kwargs}
 
 class NodeConfig(NodeStyle):
@@ -39,8 +37,10 @@ class NodeConfig(NodeStyle):
     super().__init__(**kwargs)
 
     for node in nodes:
+      # Check that the node has an id
+      if "id" not in node: continue
+      key = node["id"]
       node_style = {**kwargs, **node}
-      key = node.get("id")
       self.nodes[key] = NodeStyle(**node_style)
 
     for conditional_node in conditional_nodes:

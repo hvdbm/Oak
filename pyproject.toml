@@ -25,6 +25,7 @@ optional-dependencies.dev = [
 
 [tool.mypy]
 disable_error_code = ["import-untyped"]
+exclude = ["build/*"]
 
 [tool.ruff]
 line-length = 120

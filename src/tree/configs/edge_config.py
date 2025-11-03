@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class EdgeStyle(BaseModel):
   color: str = "black"
   dir: str = "none"
@@ -20,6 +21,8 @@ class EdgeConfig(EdgeStyle):
 
     for edge in edges:
       edge_style = {**kwargs, **edge}
-      key = (edge.get("start_node"), edge.get("end_node"))
+      if "start_node" not in edge or "end_node" not in edge:
+        continue
+      key = (edge["start_node"], edge["end_node"])
       self.edges[key] = EdgeStyle(**edge_style)
 
