@@ -1,24 +1,17 @@
 import pycountry
+from pydantic import BaseModel
 
 from src.person import Person
 from src.tree.label import bold, newline
 
 
-class PersonLabelConfig():
-  def __init__(self,
-    bold_names: bool = True,
-    show_nationalities: bool = True,
-    show_nickname: bool = True,
-    show_years: bool = True,
-    split_names: bool = False,
-    upper_last_name: bool = False
-  ):
-    self.bold_names = bold_names
-    self.show_nationalities = show_nationalities
-    self.show_nickname = show_nickname
-    self.show_years = show_years
-    self.split_names = split_names
-    self.upper_last_name = upper_last_name
+class PersonLabelConfig(BaseModel):
+  bold_names: bool = True
+  show_nationalities: bool = True
+  show_nickname: bool = True
+  show_years: bool = True
+  split_names: bool = False
+  upper_last_name: bool = False  
 
   def get_names_label(self, person: Person) -> str:
     """

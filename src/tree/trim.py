@@ -1,25 +1,25 @@
 from src.family import Family
-from src.tree.configs.trim_config import TrimConfig
+from src.tree.configs.trim_config import TrimConfig, AncestorsOfConfig, DescendantsOfConfig
 
-def keep_only_ancestors(family: Family, ancestors_of: str) -> None:
-  ancestors = family.get_ancestors(ancestors_of)
-  new_family_ids = ancestors + [ancestors_of]
+def keep_only_ancestors(family: Family, config: AncestorsOfConfig) -> None:
+  ancestors = family.get_ancestors(config.of)
+  new_family_ids = ancestors + [config.of]
   ids_to_remove = set(family.members.keys()).difference(new_family_ids)
   family.remove_persons(ids_to_remove)
 
-def keep_only_descendants(family: Family, descendants_of: str) -> None:
+def keep_only_descendants(family: Family, config: DescendantsOfConfig) -> None:
   """
-  Remove the persons which are not the descendants of the specified id "descendants_of". 
+  Remove the persons which are not the descendants of the specified id "config". 
 
   Paremeters:
     family (Family): the family object with all the persons.
-    descendants_of (str): the ID of the persons to keep the descendants.
+    config (str): the ID of the persons to keep the descendants.
 
   Returns:
     None
   """
-  descendants, spouses = family.get_descendants(descendants_of, False)
-  new_family_ids = descendants + spouses + [descendants_of] + family.members[descendants_of].spouses
+  descendants, spouses = family.get_descendants(config.of, config.include_spouses)
+  new_family_ids = descendants + spouses + [config.of] + family.members[config.of].spouses
   ids_to_remove = set(family.members.keys()).difference(new_family_ids)
   family.remove_persons(ids_to_remove)
 
