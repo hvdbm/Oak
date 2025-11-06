@@ -2,6 +2,7 @@ class Person():
   def __init__(self,
     first_name: str,
     last_name: str,
+    middle_names: list[str] = [],
     birth_year: str = "?",
     sex: str = "?",
     parents: list[str] = [],
@@ -18,6 +19,7 @@ class Person():
 
     self.first_name = first_name
     self.last_name = last_name
+    self.middle_names = middle_names
     self.sex = sex
     self.birth_year = birth_year
     self.death_year = death_year
@@ -31,5 +33,10 @@ class Person():
     self.spouses = spouses
     self.childrens = childrens
 
-    # Calculated properties
-    self.n_descendants: int | None = None
+  def full_name(self) -> str:
+    """
+    Get the full name of the person.
+    """
+    name = f"{self.first_name} {self.last_name}"
+    if self.suffix is not None: name += f" {self.suffix}"
+    return name

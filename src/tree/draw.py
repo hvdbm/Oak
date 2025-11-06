@@ -175,7 +175,7 @@ def get_persons_list(family: Family, config: TreeConfiguration) -> list[Person]:
 
   # Order remaining members of the family by n_descendants descending order
   persons = list(family.members.values())
-  persons.sort(key=lambda x : x.n_descendants if x.n_descendants is not None else 0)
+  persons.sort(key=lambda x : family.n_descendants.get(x.id, 0))
   persons.reverse()
 
   # If a start person is defined, move it to the first position

@@ -5,8 +5,8 @@
 The file can specified the following fields to customize the tree :
 |Field|Type|Description|Default value|
 |-----|-----|-----|-----|
-|`background_color`     | `str`               | Color of the background of the image. See [Color Names of Graphviz](https://graphviz.org/doc/info/colors.html). | `""`  |
-|`filename`             | `str`               | Name of the generated file.                                                                                     | `"family_tree.png"` |
+|`background_color`     | `str`               | Color of the background of the image. See [Color Names of Graphviz](https://graphviz.org/doc/info/colors.html)   | `""`  |
+|`filename`             | `str`               | Name of the generated file                                                                                       | `"family_tree.png"` |
 |`person_label_config`  | `PersonLabelConfig` | TODO | / |
 |`title_config`         | `TitleConfig`       | TODO | / |
 |`trim_config`          | `TrimConfig`        | TODO | / |
@@ -23,9 +23,10 @@ Config to customize how the text of a person is rendered (the label of a node). 
 
 |Field|Type|Description|Default value|
 |-----|-----|-----|-----|
-|`bold_names`         | `bool`  | Bold the label                                        | `True`  |
+|`bold_names`         | `bool`  | Bold the first and last names                         | `True`  |
 |`show_nationalities` | `bool`  | Show the nationalities as flag                        | `True`  |
 |`show_nickname`      | `bool`  | Show the nickname (in quotes)                         | `True`  |
+|`show_middle_names`  | `bool`  | Show the list of middle names                         | `False` |
 |`show_years`         | `bool`  | Show the birth and death years                        | `True`  |
 |`split_names`        | `bool`  | Add a return to line between the first and last names | `False` |
 |`upper_last_name`    | `bool`  | Put the last name in uppercase                        | `False` |
@@ -44,6 +45,7 @@ Config to select the persons to show in tree. In the field `trim_config` :
 
 |Field|Type|Description|Default value|
 |-----|-----|-----|-----|
-|`descendants_of`               | `str`       | ID of the person whose only the descendants will be kept in the tree          | `None`  |
-|`ignore`                       | `list[str]` | List of id of persons to ignore in the family tree                            | `[]`    |
-|`ignore_incomplete_relations`  | `bool`      | Ignore or not the relations who point to a person who doesn't exist in tree.  | `False` |
+|`ancestors_of`               | `AncestorsOfConfig`       | TODO  | `None`  |
+|`descendants_of`               | `DescendantsOfConfig`       | TODO  | `None`  |
+|`ignore`                       | `list[str]` | List of id of persons to ignore in the family tree                     | `[]`    |
+|`ignore_incomplete_relations`  | `bool`      | Ignore the relations with a person who doesn't exist in tree           | `False` |
