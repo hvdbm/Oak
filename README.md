@@ -35,7 +35,7 @@ The data is expected to follow the [`Family`](https://github.com/hvdbm/Oak/blob/
 
 #### 🔍 oak_inspect
 
-Inspect for available data at a path and show a summary of the files, persons and warnings.
+Search for available data at a path and show a summary of the files, persons, errors and warnings.
 
 ```
 usage: oak_inspect.py [-h] --input_path INPUT_PATH

@@ -82,8 +82,8 @@ def check_nationalities(family: Family) -> None:
         nationalities_count[nationality] += 1
 
   print(f"🌐 Number of nationalities  : {len(nationalities_count)}")
-  for nationality, count in nationalities_count.items():
-    print(f"   - {nationality} : {count} persons ({count/len(family.members.keys())*100:.2f}%)")
+  for key in sorted(nationalities_count.keys()):
+    print(f"   - {key} : {nationalities_count[key]} persons ({nationalities_count[key]/len(family.members.keys())*100:.2f}%)")
 
 def check_warnings(family: Family) -> None:
   """
