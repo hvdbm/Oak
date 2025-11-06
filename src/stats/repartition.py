@@ -3,9 +3,9 @@ import pandas as pd
 import seaborn as sns
 
 from . import FIG_SIZE
+from src.stats.configuration import ChartConfig
 
-
-def plot_pie(value_counts: pd.Series, title: str, output_path: str) -> None:
+def plot_pie(value_counts: pd.Series, title: str, output_path: str, chart_config: ChartConfig) -> None:
   """
   Plot a pie chart of the repartition of a categorical variable.
 
@@ -17,7 +17,7 @@ def plot_pie(value_counts: pd.Series, title: str, output_path: str) -> None:
   Returns:
     None
   """
-  plt.subplots(figsize=FIG_SIZE)
+  plt.subplots(figsize=(chart_config.width, chart_config.height))
   plt.pie(
     value_counts.values,
     labels=value_counts.keys(),
@@ -26,7 +26,7 @@ def plot_pie(value_counts: pd.Series, title: str, output_path: str) -> None:
     colors=sns.color_palette('Set2'),
   )
   plt.title(title, weight='bold')
-  plt.tight_layout()
+  if chart_config.tight_layout: plt.tight_layout()
   plt.savefig(output_path)
   plt.close()
 
