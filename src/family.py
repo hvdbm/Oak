@@ -35,7 +35,7 @@ class Family():
       for value in members.values():
         value.parents = [parent for parent in value.parents if parent in members.keys()]
         value.spouses = [spouse for spouse in value.spouses if spouse in members.keys()]
-        value.childrens = [children for children in value.childrens if children in members.keys()]
+        value.children = [children for children in value.children if children in members.keys()]
 
     # Count the number of descendants for each member
     for person in members.values():
@@ -82,10 +82,10 @@ class Family():
       int: The number of descendants of the person.
     """
     if person.id in self.n_descendants: return self.n_descendants[person.id]
-    if person.childrens == []: return 0
+    if person.children == []: return 0
 
     n = 0
-    for children in person.childrens:
+    for children in person.children:
       if children not in self.members: continue
       n += self.__count_n_descendants(self.members[children])+1
     return n
@@ -119,7 +119,7 @@ class Family():
     descendants = []
     spouses = []
 
-    for child in self.members[id].childrens:
+    for child in self.members[id].children:
       descendants.append(child)
       if child not in self.members: continue
       if include_spouses:
@@ -145,7 +145,7 @@ class Family():
 
     for parent in self.members[id].parents:
       if parent not in self.members: continue
-      if len(self.members[parent].childrens) == 1: return True
+      if len(self.members[parent].children) == 1: return True
 
     return False
 
@@ -169,7 +169,7 @@ class Family():
 
       person.parents = [i for i in person.parents if i not in ids]
       person.spouses = [i for i in person.spouses if i not in ids]
-      person.childrens = [i for i in person.childrens if i not in ids]
+      person.children = [i for i in person.children if i not in ids]
     
     for person in self.members.values():
       self.n_descendants[person.id] = self.__count_n_descendants(person)

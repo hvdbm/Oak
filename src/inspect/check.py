@@ -26,7 +26,7 @@ def check_errors(family: Family) -> None:
       if spouse not in family.members.keys():
         errors.append(f'🚫  "{person.id}" has an unknown spouse: "{spouse}"')
 
-    for child in person.childrens:
+    for child in person.children:
       if child not in family.members.keys():
         errors.append(f'🚫  "{person.id}" has an unknown child: "{child}"')
   
@@ -101,7 +101,7 @@ def check_warnings(family: Family) -> None:
   warnings = []
   
   for person in family.members.values():
-    if len(person.parents) == 0 and len(person.spouses) == 0 and len(person.childrens) == 0:
+    if len(person.parents) == 0 and len(person.spouses) == 0 and len(person.children) == 0:
       warnings.append(f'🚧  "{person.id}" has no relatives.')
 
     if person.death_year is not None:
