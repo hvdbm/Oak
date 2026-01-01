@@ -7,7 +7,7 @@ class Person():
     sex: str = "?",
     parents: list[str] = [],
     spouses: list[str] = [],
-    childrens: list[str] = [],
+    children: list[str] = [],
     id: str | None = None,
     death_year: str | None = None,
     nickname: str | None = None,
@@ -31,7 +31,7 @@ class Person():
     # Relationships
     self.parents = parents
     self.spouses = spouses
-    self.childrens = childrens
+    self.children = children
 
   def full_name(self) -> str:
     """

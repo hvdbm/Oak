@@ -51,7 +51,7 @@ def get_ancestors_sunburst_data(
 
         # Update depth
         max_depth = 0
-        for child in family.members[parent_id].childrens:
+        for child in family.members[parent_id].children:
             if child in depth_dict: 
                 max_depth = max(max_depth, depth_dict[child]+1)
         depth_dict[parent_id] = max_depth

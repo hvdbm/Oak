@@ -24,13 +24,13 @@ def get_descendants_sunburst_data(
 
     person_data = family.members[person_id]
 
-    for child_id in person_data.childrens:
+    for child_id in person_data.children:
         if child_id not in family.members: continue
         # Add descendant
         persons.append(child_id)
         parents.append(person_id)
 
-        repartition_dict[child_id] = repartition_dict.get(person_id, 1) / len(person_data.childrens)
+        repartition_dict[child_id] = repartition_dict.get(person_id, 1) / len(person_data.children)
 
         _, _, _ = get_descendants_sunburst_data(family, child_id, persons, parents, repartition_dict)
     
