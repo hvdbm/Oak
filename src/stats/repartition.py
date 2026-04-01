@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 
 from . import FIG_SIZE
+from src.stats.transform import convert_column_to_str
 
 
 def plot_pie(value_counts: pd.Series, title: str, output_path: str) -> None:
@@ -29,12 +30,14 @@ def plot_pie(value_counts: pd.Series, title: str, output_path: str) -> None:
   plt.savefig(output_path)
   plt.close()
 
-def plot_bar(value_counts: pd.Series, title: str, output_path: str, horizontal: bool = True) -> None:
+def plot_bar(data: pd.DataFrame, y: str, title: str, output_path: str, horizontal: bool = True) -> None:
   """
   Plot a bar chart of the repartition of a categorical variable.
 
   Parameters:
     value_counts (pd.Series): The value counts of the categorical variable.
+    data (pd.DataFrame): The data to plot.
+    y (str): The column name of the y-axis variable.
     title (str): The title of the plot.
     output_path (str): The path to save the plot
     horizontal (bool): Whether to plot the bar chart horizontally or vertically
@@ -42,8 +45,11 @@ def plot_bar(value_counts: pd.Series, title: str, output_path: str, horizontal: 
   Returns:
     None
   """
+  if data[y].dtype != object:
+    convert_column_to_str(data, y)
+
   plt.subplots(figsize=FIG_SIZE)
-  value_counts = value_counts.sort_values(ascending=True) # Sort by count
+  value_counts = data[y].value_counts().sort_index(ascending=False)
 
   if horizontal: plt.barh(value_counts.keys(), value_counts.values)
   else: plt.bar(value_counts.keys(), value_counts.values)

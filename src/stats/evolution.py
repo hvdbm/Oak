@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
+from src.stats.transform import convert_column_to_str
+
 from . import FIG_SIZE
 
 
@@ -19,9 +21,12 @@ def plot_swarm(data: pd.DataFrame, x: str, y: str, title: str, output_path: str)
   Returns:
     None
   """
+  if data[y].dtype != object:
+    convert_column_to_str(data, y)
+
   plt.subplots(figsize=FIG_SIZE)
   sns.set_palette("Set2")
-  sns.swarmplot(x=x, y=y, data=data, hue=y)
+  sns.swarmplot(x=x, y=y, data=data, hue=y, order=sorted(data[y].unique()))
   plt.title(title, weight='bold')
   plt.savefig(output_path)
   plt.close()
